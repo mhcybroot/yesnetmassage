@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">yesnet massage</string>
+    <string name="already_have_account">Already have account</string>
+    <string name="enter_your_password">Enter Your Password</string>
+    <string name="enter_your_email">Enter Your Email</string>
+    <string name="sign_up">Sign UP</string>
+    <string name="sign_in">sign in</string>
+    <string name="click_to_sign_up">Click for Sign Up</string>
+    <string name="enter_your_user_name">Enter your user name</string>
+    <string name="enter_your_member_id">Enter your Member ID</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="enter_last_10_digit_phone_number">Enter Last 10 Digit  Phone Number</string>
+    <string name="requested_friend">Requested Friend</string>
+    <string name="bangla_counselling_group">Bangla Counselling Group</string>
+    <string name="enter_your_friend_member_id_for_refar">Enter Your Friend Member ID for refar</string>
+    <string-array name="post_name">
+        <item>SELECT</item>
+        <item>Bangla Counselling Group Admin</item>
+        <item>Active Member</item>
+        <item>Counsellor</item>
+        <item>Teacher</item>
+        <item>Team Leader</item>
+    </string-array>
+    <string-array name="contry">
+        <item>Bangladesh</item>
+        <item>Active Member</item>
+        <item>Counsellor</item>
+        <item>Teacher</item>
+        <item>Team Leader</item>
+    </string-array>
+
+    <string-array name="contryCode">
+        <item>Select</item>
+        <item>+880</item>
+        <item>+91</item>
+
+    </string-array>
+
+</resources>

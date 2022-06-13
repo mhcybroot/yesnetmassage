@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "784351473216",
+    "firebase_url": "https://yesnet-message-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "yesnet-message",
+    "storage_bucket": "yesnet-message.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:784351473216:android:f66767089a372f499079a5",
+        "android_client_info": {
+          "package_name": "com.ysenetdigital.yesnetmassage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "784351473216-jqp0evpo47j9ba3d8o36r8v7nivq676a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ysenetdigital.yesnetmassage",
+            "certificate_hash": "a5332bffa8ab1fc9d9f371945cb8f45902f7eba5"
+          }
+        },
+        {
+          "client_id": "784351473216-4l1slkom9h6tnm306s71vjoen91pctpr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4U4ZrxMMljrXV50Q0U4TnKYM5pLc0gWk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "784351473216-4l1slkom9h6tnm306s71vjoen91pctpr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

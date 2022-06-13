@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Fregments.Members">
+
+    <com.google.android.material.tabs.TabLayout
+        android:layout_width="match_parent"
+        android:background="@color/teal_700"
+        android:id="@+id/tab_layout_member"
+        android:elevation="10dp"
+        app:tabIndicatorColor="@color/white"
+        app:tabSelectedTextColor="@color/white"
+        app:tabMaxWidth="0dp"
+        app:tabGravity="fill"
+        android:layout_alignParentBottom="true"
+        app:tabMode="fixed"
+        app:tabTextColor="@color/white"
+        android:layout_height="56dp"/>
+    <androidx.viewpager.widget.ViewPager
+        android:layout_width="match_parent"
+        android:id="@+id/viewPage_member"
+        android:layout_above="@id/tab_layout_member"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>
+
+
+<!--<Button-->
+<!--    android:id="@+id/button"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:layout_weight="1"-->
+<!--    android:backgroundTint="#0C6810"-->
+<!--    android:text="add Friends" />-->
+
+<!--<Button-->
+<!--    android:id="@+id/button2"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:layout_weight="1"-->
+<!--    android:backgroundTint="#0C6810"-->
+<!--    android:text="requests" />-->
+
+<!--<Button-->
+<!--    android:id="@+id/button3"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:layout_weight="1"-->
+<!--    android:backgroundTint="#0C6810"-->
+<!--    android:text="Search Friends" />-->
+<!--</LinearLayout>-->

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:weightSum="10"
+    android:gravity="center_vertical"
+    tools:context=".admin.postList">
+
+
+    <Button
+        android:id="@+id/postlist_BanglaCounsellerGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:backgroundTint="#175789"
+        android:text="@string/bangla_counselling_group" />
+
+    <Button
+        android:id="@+id/postlist_counseller"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:backgroundTint="#175789"
+        android:text="counsellor" />
+
+    <Button
+        android:id="@+id/postlist_Teacher"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:backgroundTint="#175789"
+        android:text="Teacher" />
+
+    <Button
+        android:id="@+id/postlist_tl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:backgroundTint="#175789"
+        android:text="Team Leader" />
+
+    <Button
+        android:id="@+id/postlist_stl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:backgroundTint="#175789"
+        android:text="Senior Team Leader" />
+
+
+</LinearLayout>
