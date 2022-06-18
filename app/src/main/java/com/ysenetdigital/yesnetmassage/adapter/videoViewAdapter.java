@@ -1,13 +1,13 @@
 package com.ysenetdigital.yesnetmassage.adapter;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,25 +18,31 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.pgreze.reactions.ReactionPopup;
 import com.github.pgreze.reactions.ReactionsConfig;
 import com.github.pgreze.reactions.ReactionsConfigBuilder;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.extractor.ExtractorsFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.picasso.Picasso;
-import com.ysenetdigital.yesnetmassage.ImageViewer;
 import com.ysenetdigital.yesnetmassage.R;
-import com.ysenetdigital.yesnetmassage.models.additional_pic;
+import com.ysenetdigital.yesnetmassage.models.videoView;
 
 import java.util.ArrayList;
 
-public class adiitionalPicAdapter extends RecyclerView.Adapter<adiitionalPicAdapter.viewholder> {
-
-
+public class videoViewAdapter extends RecyclerView.Adapter<videoViewAdapter.viewholder> {
     Context context;
-    ArrayList<additional_pic> list;
+    ArrayList<videoView> list = new ArrayList<>();
 
-    public adiitionalPicAdapter(Context context, ArrayList<additional_pic> list) {
+    public videoViewAdapter(Context context, ArrayList<videoView> list) {
         this.context = context;
         this.list = list;
     }
@@ -44,15 +50,14 @@ public class adiitionalPicAdapter extends RecyclerView.Adapter<adiitionalPicAdap
     @NonNull
     @Override
     public viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        View view = LayoutInflater.from(context).inflate(R.layout.simple_addition_pic, parent, false);
-        return new adiitionalPicAdapter.viewholder(view);
+        View view = LayoutInflater.from(context).inflate(R.layout.videoview, parent, false);
+        return new videoViewAdapter.viewholder(view);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull viewholder holder, int position) {
-        additional_pic model = list.get(position);
+        videoView model = list.get(position);
         ReactionsConfig config = new ReactionsConfigBuilder(context)
                 .withReactions(new int[]{
                         R.drawable.like,
@@ -107,38 +112,14 @@ public class adiitionalPicAdapter extends RecyclerView.Adapter<adiitionalPicAdap
                 return true;
             }
         });
-//        holder.imageView7.se { v, event ->
-//                // Avoid scroll view to consume events
-//                scrollView.requestDisallowInterceptTouchEvent(true);
-//            // Resolve reactions selection
-//            popup.onTouch(v, event);
-//        }
-        holder.imageView.setOnClickListener(view -> {
-            Intent intent = new Intent(context, ImageViewer.class);
-            intent.putExtra("url", model.getPicUrl());
-            context.startActivity(intent);
-        });
-
-        FirebaseDatabase.getInstance().getReference().child("users").child(model.getUserID()).child("story").child(model.getPicId()).child("picUrl").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-
-                } else {
-                    String profilePic = String.valueOf(task.getResult().getValue());
-                    Picasso.get().load(profilePic).placeholder(R.drawable.cicle_logo).into(holder.imageView);
-                }
-            }
-        });
-
-
-        if (model.getPicId() != null) {
+        SimpleExoPlayer exoPlayer;
+        if (model.getVideoID() != null) {
             holder.imageView6.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (model.getPicId() != null) {
+                    if (model.getVideoID() != null) {
 
-                        FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("story").child(model.getPicId()).removeValue();
+                        FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("story").child(model.getVideoID()).removeValue();
 
                     }
                 }
@@ -146,9 +127,39 @@ public class adiitionalPicAdapter extends RecyclerView.Adapter<adiitionalPicAdap
         } else {
             holder.imageView6.setVisibility(View.GONE);
         }
+        try {
+            String link = model.getVidoeUrl();
+            Uri videouri = Uri.parse(model.getVidoeUrl());
 
+            BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+
+            TrackSelector trackSelector = new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(bandwidthMeter));
+
+            exoPlayer = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
+
+            DefaultHttpDataSourceFactory dataSourceFactory = new DefaultHttpDataSourceFactory("exoplayer_video");
+            ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+
+            MediaSource mediaSource = new ExtractorMediaSource(videouri, dataSourceFactory, extractorsFactory, null, null);
+
+            holder.videoView.setPlayer(exoPlayer);
+            exoPlayer.prepare(mediaSource);
+            exoPlayer.setPlayWhenReady(false);
+            ProgressDialog progressDialog = new ProgressDialog(context);
+            progressDialog.setMessage("Loading");
+            progressDialog.setCancelable(false);
+
+            if (exoPlayer.isLoading()) {
+                progressDialog.show();
+            } else {
+                progressDialog.dismiss();
+            }
+
+
+        } catch (Exception e) {
+            Toast.makeText(context, "error" + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
-
 
     @Override
     public int getItemCount() {
@@ -156,17 +167,17 @@ public class adiitionalPicAdapter extends RecyclerView.Adapter<adiitionalPicAdap
     }
 
     public class viewholder extends RecyclerView.ViewHolder {
-
-        ImageView imageView, imageView6, imageView7, imageView8, imageView9;
+        SimpleExoPlayerView videoView;
+        ImageView imageView, imageView7, imageView6;
         TextView countlike;
 
         public viewholder(@NonNull View itemView) {
             super(itemView);
 
-            imageView = itemView.findViewById(R.id.imageView_additional);
-            imageView6 = itemView.findViewById(R.id.imageView6);
-            imageView7 = itemView.findViewById(R.id.imageView7);
-            countlike = itemView.findViewById(R.id.textView9);
+            videoView = itemView.findViewById(R.id.videoView2);
+            imageView6 = itemView.findViewById(R.id.imageView9);
+            imageView7 = itemView.findViewById(R.id.imageView8);
+            countlike = itemView.findViewById(R.id.textView10);
 
         }
     }

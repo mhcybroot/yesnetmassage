@@ -34,9 +34,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/add_recycler_image"
-
-        android:layout_alignParentBottom="true"
         android:layout_marginTop="10dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/userImage_RecyclerVIdeo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/addpicProfile"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible">
+
+    </androidx.recyclerview.widget.RecyclerView>
 
     <LinearLayout
         android:id="@+id/spiner_layout"

@@ -66,9 +66,10 @@ public class Teacher extends Fragment {
                             list.add(models);
                         }
                         if (list.isEmpty()) {
+                            FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("TotalFriend").setValue(0);
 
                         } else {
-
+                        FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("TotalFriend").setValue(list.size());
                         }
 
                     }

@@ -66,6 +66,13 @@ public class FriendRequest extends Fragment {
                                 }
                             }
                         }
+
+                        if (list.isEmpty()) {
+                            FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("TotalRequestFriendFrom").setValue(0);
+
+                        } else {
+                            FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("TotalRequestFriendFrom").setValue(list.size());
+                        }
                     }
                     adapters.notifyDataSetChanged();
                 }

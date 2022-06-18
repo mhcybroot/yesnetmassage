@@ -315,8 +315,11 @@ public class memberlistadapter extends RecyclerView.Adapter<memberlistadapter.vi
                         memberlistmodel memberlistmodel = new memberlistmodel(model.getId(), "member");
                         FirebaseDatabase.getInstance().getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(Objects.requireNonNull(model.getId())).setValue(memberlistmodel);
                         Map<String, String> zmap = new HashMap<>();
-                        zmap.put("CounsellingGroupStatus", "member");
+                        zmap.put("counsellingGroupStatus", "member");
                         FirebaseFirestore.getInstance().collection(model.getId()).document(model.getId()).set(zmap, SetOptions.merge());
+                        Map<String, String> zmap1 = new HashMap<>();
+                        zmap1.put("CounsellingGroupStatus", "member");
+                        FirebaseFirestore.getInstance().collection(model.getId()).document(model.getId()).set(zmap1, SetOptions.merge());
 
                     }
                 });

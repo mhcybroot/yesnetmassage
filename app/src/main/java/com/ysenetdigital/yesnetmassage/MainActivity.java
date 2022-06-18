@@ -233,11 +233,34 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        try {
-            FirebaseDatabase.getInstance().getReference().child("presence").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).setValue("Online");
-        } catch (Exception e) {
-            Toast.makeText(this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-        }
+        FirebaseDatabase.getInstance().getReference().child("users").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (task.isSuccessful()) {
+                    String username = String.valueOf(task.getResult().getValue());
+                    if (username.equals("null")){
+                        Intent intent = new Intent(MainActivity.this, signUp.class);
+                        intent.putExtra("number",FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+                        startActivity(intent);
+                        finishAffinity();
+                    }else {
+                        try {
+                            FirebaseDatabase.getInstance().getReference().child("presence").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).setValue("Online");
+                        } catch (Exception e) {
+                            Toast.makeText(MainActivity.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                } else {
+                    Intent intent = new Intent(MainActivity.this, signUp.class);
+                    intent.putExtra("number",FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+                    startActivity(intent);
+                    finishAffinity();
+                }
+            }
+        });
+
+
         super.onStart();
     }
 

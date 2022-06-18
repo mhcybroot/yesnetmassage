@@ -89,7 +89,7 @@ public class Counselling extends Fragment {
 //            }
 //        };
 try {
-    firestore.collection(FirebaseAuth.getInstance().getUid()).orderBy("lastMassageTime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+    firestore.collection(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).orderBy("lastMassageTime").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
         @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -111,23 +111,23 @@ try {
 
             }
 
-            if (list.isEmpty()){
+            if (datalist.isEmpty()){
                 datalist.add( new userModel("yesnet@gmail.com"," বাংলা কাউন্সিলিং গ্রুপ"," বাংলা কাউন্সিলিং গ্রুপ","yP6RgpxWbVPHrnkLNv1hdNlxVC43","yP6RgpxWbVPHrnkLNv1hdNlxVC43","yP6RgpxWbVPHrnkLNv1hdNlxVC43"));
 
-            }else if (list.size()==0){
+            }else if (datalist.size()==0){
                 datalist.add( new userModel("yesnet@gmail.com"," বাংলা কাউন্সিলিং গ্রুপ"," বাংলা কাউন্সিলিং গ্রুপ","yP6RgpxWbVPHrnkLNv1hdNlxVC43","yP6RgpxWbVPHrnkLNv1hdNlxVC43","yP6RgpxWbVPHrnkLNv1hdNlxVC43"));
 
-            }else if (list.size()==1){
+            }else if (datalist.size()==1){
                 datalist.add( new userModel("yesnet@gmail.com"," বাংলা কাউন্সিলিং গ্রুপ"," বাংলা কাউন্সিলিং গ্রুপ","yP6RgpxWbVPHrnkLNv1hdNlxVC43","yP6RgpxWbVPHrnkLNv1hdNlxVC43","yP6RgpxWbVPHrnkLNv1hdNlxVC43"));
 
-            }else if (list.size()==2){
+            }else if (datalist.size()==2){
                 datalist.add( new userModel("yesnet@gmail.com"," বাংলা কাউন্সিলিং গ্রুপ"," বাংলা কাউন্সিলিং গ্রুপ","yP6RgpxWbVPHrnkLNv1hdNlxVC43","yP6RgpxWbVPHrnkLNv1hdNlxVC43","yP6RgpxWbVPHrnkLNv1hdNlxVC43"));
 
-            }else if (list.size()>2&&!list.isEmpty()){
-                datalist.add(list.size()-1, new userModel("yesnet@gmail.com"," বাংলা কাউন্সিলিং গ্রুপ"," বাংলা কাউন্সিলিং গ্রুপ","yP6RgpxWbVPHrnkLNv1hdNlxVC43","yP6RgpxWbVPHrnkLNv1hdNlxVC43","yP6RgpxWbVPHrnkLNv1hdNlxVC43"));
+            }else if (datalist.size()>2&&!list.isEmpty()){
+                datalist.add(datalist.size()-1, new userModel("yesnet@gmail.com"," বাংলা কাউন্সিলিং গ্রুপ"," বাংলা কাউন্সিলিং গ্রুপ","yP6RgpxWbVPHrnkLNv1hdNlxVC43","yP6RgpxWbVPHrnkLNv1hdNlxVC43","yP6RgpxWbVPHrnkLNv1hdNlxVC43"));
 
             }else {
-                datalist.add(list.size()-1, new userModel("yesnet@gmail.com"," বাংলা কাউন্সিলিং গ্রুপ"," বাংলা কাউন্সিলিং গ্রুপ","yP6RgpxWbVPHrnkLNv1hdNlxVC43","yP6RgpxWbVPHrnkLNv1hdNlxVC43","yP6RgpxWbVPHrnkLNv1hdNlxVC43"));
+                datalist.add( new userModel("yesnet@gmail.com"," বাংলা কাউন্সিলিং গ্রুপ"," বাংলা কাউন্সিলিং গ্রুপ","yP6RgpxWbVPHrnkLNv1hdNlxVC43","yP6RgpxWbVPHrnkLNv1hdNlxVC43","yP6RgpxWbVPHrnkLNv1hdNlxVC43"));
 
             }
 //            if (list.size() < 2){

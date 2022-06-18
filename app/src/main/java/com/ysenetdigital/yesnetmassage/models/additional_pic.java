@@ -2,8 +2,25 @@ package com.ysenetdigital.yesnetmassage.models;
 
 public class additional_pic {
     String picUrl;
-
+String picId;
+String userID;
     public additional_pic() {
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    public String getPicId() {
+        return picId;
+    }
+
+    public void setPicId(String picId) {
+        this.picId = picId;
     }
 
     public additional_pic(String picUrl) {
@@ -13,6 +30,7 @@ public class additional_pic {
     public String getPicUrl() {
         return picUrl;
     }
+
 
     public void setPicUrl(String picUrl) {
         this.picUrl = picUrl;

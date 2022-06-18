@@ -6,6 +6,7 @@
         <entry key="app/src/main/res/drawable/delivary.xml" value="0.183" />
         <entry key="app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.319" />
         <entry key="app/src/main/res/drawable/ic_baseline_chevron_left_24.xml" value="0.246" />
+        <entry key="app/src/main/res/drawable/ic_baseline_delete_24.xml" value="0.1925" />
         <entry key="app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.319" />
         <entry key="app/src/main/res/drawable/recever.xml" value="0.198" />
         <entry key="app/src/main/res/drawable/seen.xml" value="0.183" />
@@ -31,8 +32,8 @@
         <entry key="app/src/main/res/layout/activity_requesteduseradd.xml" value="0.19635416666666666" />
         <entry key="app/src/main/res/layout/activity_sign_in.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_sign_up.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/activity_user_profile.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/activity_user_viewer.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_user_profile.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/activity_user_viewer.xml" value="0.14" />
         <entry key="app/src/main/res/layout/activity_verify_counsellor.xml" value="0.30825138948268493" />
         <entry key="app/src/main/res/layout/chatsuserlist.xml" value="0.1611799914493373" />
         <entry key="app/src/main/res/layout/fragment_add_friends.xml" value="0.30825138948268493" />
@@ -51,6 +52,7 @@
         <entry key="app/src/main/res/layout/simple_user_list.xml" value="0.22" />
         <entry key="app/src/main/res/layout/simplemeberlist.xml" value="0.19635416666666666" />
         <entry key="app/src/main/res/layout/sninner_lanuage.xml" value="0.30825138948268493" />
+        <entry key="app/src/main/res/layout/videoview.xml" value="0.33" />
         <entry key="app/src/main/res/menu/banglacounsellingmenu.xml" value="0.1" />
         <entry key="app/src/main/res/menu/main_menu.xml" value="0.1" />
         <entry key="app/src/main/res/xml-mcc880/country.xml" value="0.37552083333333336" />

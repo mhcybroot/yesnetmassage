@@ -61,7 +61,12 @@ try {
                     }
                 }
 
+                if (list.isEmpty()) {
+                    FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("TotalRequestFriend").setValue(0);
 
+                } else {
+                    FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("TotalRequestFriend").setValue(list.size());
+                }
             }
             adapters.notifyDataSetChanged();
         }

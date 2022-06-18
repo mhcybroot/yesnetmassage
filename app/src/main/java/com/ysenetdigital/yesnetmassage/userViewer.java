@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -17,10 +18,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.ysenetdigital.yesnetmassage.adapter.adiitionalPicAdapter;
+import com.ysenetdigital.yesnetmassage.adapter.videoViewAdapter;
 import com.ysenetdigital.yesnetmassage.databinding.ActivityUserViewerBinding;
 import com.ysenetdigital.yesnetmassage.models.additional_pic;
+import com.ysenetdigital.yesnetmassage.models.videoView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class userViewer extends AppCompatActivity {
@@ -34,14 +38,6 @@ ImageView proPic;
         binding = ActivityUserViewerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getSupportActionBar().hide();
-        database = FirebaseDatabase.getInstance();
-        auth = FirebaseAuth.getInstance();
-        ArrayList<additional_pic> list = new ArrayList<>();
-        final adiitionalPicAdapter adiitionalPicAdapter = new adiitionalPicAdapter(this, list);
-        binding.userImageRecycler.setAdapter(adiitionalPicAdapter);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-        binding.userImageRecycler.setLayoutManager(gridLayoutManager);
-        proPic = findViewById(R.id.imageViewer_image);
         String name = getIntent().getStringExtra("name");
         String email = getIntent().getStringExtra("email");
         String post = getIntent().getStringExtra("post");
@@ -49,12 +45,79 @@ ImageView proPic;
         String userId = getIntent().getStringExtra("userId");
         String memberID = getIntent().getStringExtra("memberID");
         String total_reply = getIntent().getStringExtra("total_reply");
+        database = FirebaseDatabase.getInstance();
+        auth = FirebaseAuth.getInstance();
+        ArrayList<additional_pic> list = new ArrayList<>();
+        ArrayList<videoView> videoViewArrayList =new ArrayList<>();
+        final videoViewAdapter videoadapter = new videoViewAdapter(this,videoViewArrayList);
+        binding.userVideoRecycler.setAdapter(videoadapter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        binding.userVideoRecycler.setLayoutManager(linearLayoutManager);
+        FirebaseDatabase.getInstance().getReference().child("users").child(Objects.requireNonNull(userId)).child("storyVideo").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                videoViewArrayList.clear();
+                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+                    videoView videoView = snapshot1.getValue(videoView.class);
+                    videoViewArrayList.add(videoView);
+                }
+
+
+                if (videoViewArrayList.isEmpty() ){
+                    Toast.makeText(getApplicationContext(), "not find any video", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(getApplicationContext(), "find video list ", Toast.LENGTH_SHORT).show();
+                }
+                videoadapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+//        ArrayList<videoView> videoViewArrayList =new ArrayList<>();
+//        final videoViewAdapter videoadapter = new videoViewAdapter(this,videoViewArrayList);
+//        binding.userImageRecyclerVIdeo.setAdapter(videoadapter);
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+//        binding.userImageRecyclerVIdeo.setLayoutManager(linearLayoutManager);
+//        FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("storyVideo").addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                videoViewArrayList.clear();
+//                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+//                    videoView videoView = snapshot1.getValue(videoView.class);
+//                    videoViewArrayList.add(videoView);
+//                }
+//
+//
+//                if (videoViewArrayList.isEmpty() ){
+//                    Toast.makeText(userViewer.this, "not find any video", Toast.LENGTH_SHORT).show();
+//                }else {
+//                    Toast.makeText(userViewer.this, "find video list ", Toast.LENGTH_SHORT).show();
+//                }
+//                videoadapter.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                Toast.makeText(userViewer.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+
+        final adiitionalPicAdapter adiitionalPicAdapter = new adiitionalPicAdapter(this, list);
+        binding.userImageRecycler.setAdapter(adiitionalPicAdapter);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        binding.userImageRecycler.setLayoutManager(gridLayoutManager);
+        proPic = findViewById(R.id.imageViewer_image);
+
         binding.name.setText("Name:-  "+name);
         binding.email.setText("Email:-  "+email);
         binding.post.setText("Post:-  "+post);
         binding.memberID.setText("Member ID:-  "+memberID);
         binding.totalReply.setText("Total Reply:-  "+total_reply);
-        database.getReference().child("users").child(auth.getUid()).child("story").addValueEventListener(new ValueEventListener() {
+        database.getReference().child("users").child(userId).child("story").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
@@ -62,9 +125,7 @@ ImageView proPic;
                     additional_pic model1 = snapshot1.getValue(additional_pic.class);
                     list.add(model1);
                 }
-                if (list.size() >0){
-                    binding.userImageRecycler.setVisibility(View.VISIBLE);
-                }
+
                 adiitionalPicAdapter.notifyDataSetChanged();
             }
 

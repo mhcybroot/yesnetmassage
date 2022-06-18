@@ -18,9 +18,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mukesh.OnOtpCompletionListener;
 import com.ysenetdigital.yesnetmassage.databinding.ActivityOtpBinding;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class OTP extends AppCompatActivity {
@@ -94,10 +97,44 @@ String verificationId;
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
+                            try {
+                                FirebaseDatabase.getInstance().getReference().child("users").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            String username = String.valueOf(task.getResult().getValue());
+                                            if (username.equals("null")){
+                                                Intent intent = new Intent(OTP.this, signUp.class);
+                                                intent.putExtra("number",phoneNumber);
+                                                startActivity(intent);
+                                                finishAffinity();
+                                            }else {
+                                                Intent intent = new Intent(OTP.this, MainActivity.class);
+                                                intent.putExtra("number",phoneNumber);
+                                                startActivity(intent);
+                                                finishAffinity();
+                                            }
+
+                                        } else {
+                                            Intent intent = new Intent(OTP.this, MainActivity.class);
+                                            intent.putExtra("number",phoneNumber);
+                                            startActivity(intent);
+                                            finishAffinity();
+                                        }
+                                    }
+                                });
+
+
+                            }catch (Exception e){
+                                Toast.makeText(OTP.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                            }finally {
                                 Intent intent = new Intent(OTP.this, signUp.class);
                                 intent.putExtra("number",phoneNumber);
                                 startActivity(intent);
                                 finishAffinity();
+                            }
+
+
 
 
                             } else {
