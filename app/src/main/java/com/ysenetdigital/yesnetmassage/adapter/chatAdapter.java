@@ -140,7 +140,8 @@ try {
 //                ((ReciverViewHolder) holder).receverMsg.setText(massageModel.getMassage());
 //            }
         }
-    }else if (page==2){
+    }
+    else if (page==2){
         if (holder.getClass() == SenderViewHolder.class) {
             ((SenderViewHolder) holder).senderMsg.setText(massageModel.getMassage());
             ((SenderViewHolder) holder).senderMsg.setMovementMethod(LinkMovementMethod.getInstance());

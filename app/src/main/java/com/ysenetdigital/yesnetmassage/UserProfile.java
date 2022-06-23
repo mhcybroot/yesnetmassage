@@ -64,12 +64,12 @@ public class UserProfile extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
         ArrayList<additional_pic> list = new ArrayList<>();
-        final adiitionalPicAdapter adiitionalPicAdapter = new adiitionalPicAdapter(this, list);
+        final adiitionalPicAdapter adiitionalPicAdapter = new adiitionalPicAdapter(this, list,FirebaseAuth.getInstance().getUid());
         binding.addpicProfile.setAdapter(adiitionalPicAdapter);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
         binding.addpicProfile.setLayoutManager(gridLayoutManager);
         ArrayList<videoView> videoViewArrayList =new ArrayList<>();
-        final videoViewAdapter videoadapter = new videoViewAdapter(this,videoViewArrayList);
+        final videoViewAdapter videoadapter = new videoViewAdapter(this,videoViewArrayList,FirebaseAuth.getInstance().getUid());
         binding.userImageRecyclerVIdeo.setAdapter(videoadapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         binding.userImageRecyclerVIdeo.setLayoutManager(linearLayoutManager);
@@ -79,7 +79,9 @@ public class UserProfile extends AppCompatActivity {
                 videoViewArrayList.clear();
                 for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                     videoView videoView = snapshot1.getValue(videoView.class);
+                    videoView.setVideoID(snapshot1.getKey());
                     videoViewArrayList.add(videoView);
+
                 }
 
 
@@ -409,14 +411,14 @@ public class UserProfile extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Uri uri) {
                                         String imageUrl = uri.toString();
-                                        HashMap<String, Object> map = new HashMap<>();
-                                        map.put("VidoeUrl", imageUrl);
-                                        map.put("userID",FirebaseAuth.getInstance().getUid());
-                                        HashMap<String, Object> pic = new HashMap<>();
-                                        map.put("pic", imageUrl);
-                                        map.put("userID",FirebaseAuth.getInstance().getUid());
+                                        HashMap<String, Object> maps = new HashMap<>();
+                                        maps.put("VidoeUrl", imageUrl);
+                                        maps.put("userID",FirebaseAuth.getInstance().getCurrentUser().getUid());
+//                                        HashMap<String, Object> pic = new HashMap<>();
+//                                        map.put("pic", imageUrl);
+//                                        map.put("userID",FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-                                        database.getReference().child("users").child(auth.getCurrentUser().getUid()).child("storyVideo").push().setValue(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        database.getReference().child("users").child(auth.getCurrentUser().getUid()).child("storyVideo").push().setValue(maps).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void unused) {
                                                 progressDialog.dismiss();

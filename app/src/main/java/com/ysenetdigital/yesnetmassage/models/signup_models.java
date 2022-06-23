@@ -10,6 +10,28 @@ Integer totalRefer=0;
 
     }
 
+    public signup_models(String profilepic, String username, String userID, String memberId, String email, String password, String lastmassage, String post, String verification, String friend, String request_friend, String block, String token, String phoneNumber, String accept, String timeofmassage, long lastmassagetime, int total_reply, Integer totalRefer) {
+        this.profilepic = profilepic;
+        this.username = username;
+        this.userID = userID;
+        this.memberId = memberId;
+        this.email = email;
+        this.password = password;
+        this.lastmassage = lastmassage;
+        this.post = post;
+        this.verification = verification;
+        this.friend = friend;
+        this.request_friend = request_friend;
+        this.block = block;
+        this.token = token;
+        this.phoneNumber = phoneNumber;
+        this.accept = accept;
+        this.timeofmassage = timeofmassage;
+        this.lastmassagetime = lastmassagetime;
+        this.total_reply = total_reply;
+        this.totalRefer = totalRefer;
+    }
+
     public signup_models(String userID, String friend, String request_friend) {
         this.userID = userID;
         this.friend = friend;

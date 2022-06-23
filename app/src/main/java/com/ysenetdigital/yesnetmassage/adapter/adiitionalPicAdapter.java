@@ -22,23 +22,30 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.ysenetdigital.yesnetmassage.ImageViewer;
 import com.ysenetdigital.yesnetmassage.R;
+import com.ysenetdigital.yesnetmassage.models.GetReactModel;
 import com.ysenetdigital.yesnetmassage.models.additional_pic;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class adiitionalPicAdapter extends RecyclerView.Adapter<adiitionalPicAdapter.viewholder> {
 
 
     Context context;
     ArrayList<additional_pic> list;
+    String userKey;
 
-    public adiitionalPicAdapter(Context context, ArrayList<additional_pic> list) {
+    public adiitionalPicAdapter(Context context, ArrayList<additional_pic> list, String userKey) {
         this.context = context;
         this.list = list;
+        this.userKey = userKey;
     }
 
     @NonNull
@@ -53,6 +60,8 @@ public class adiitionalPicAdapter extends RecyclerView.Adapter<adiitionalPicAdap
     @Override
     public void onBindViewHolder(@NonNull viewholder holder, int position) {
         additional_pic model = list.get(position);
+        Toast.makeText(context, userKey, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, FirebaseAuth.getInstance().getUid(), Toast.LENGTH_SHORT).show();
         ReactionsConfig config = new ReactionsConfigBuilder(context)
                 .withReactions(new int[]{
                         R.drawable.like,
@@ -64,41 +73,116 @@ public class adiitionalPicAdapter extends RecyclerView.Adapter<adiitionalPicAdap
                 .build();
 
         @SuppressLint("SetTextI18n") ReactionPopup popup = new ReactionPopup(context, config, (positio) -> {
-            int like = 0, laughing = 0, angry = 0, dislike = 0;
+            Map<String, Integer> setReact = new HashMap<>();
+            setReact.put("Position", positio);
 
-            switch (positio) {
-                case 0:
-                    like++;
-                    holder.countlike.setText(" Total 👍 :- " + like + " Total 😆 :- " + laughing + " Total 😡 :- " +
-                            angry + " Total 👎 :- " +
-                            dislike);
-                    break;
-                case 1:
-                    laughing++;
-                    holder.countlike.setText(" Total 👍 :- " + like + " Total 😆 :- " + laughing + " Total 😡 :- " +
-                            angry + " Total 👎 :- " +
-                            dislike);
-                    break;
-                case 2:
-                    angry++;
-                    holder.countlike.setText(" Total 👍 :- " + like + " Total 😆 :- " + laughing + " Total 😡 :- " +
-                            angry + " Total 👎 :- " +
-                            dislike);
-                    break;
-                case 3:
-                    dislike++;
-                    holder.countlike.setText(" Total 👍 :- " + like + " Total 😆 :- " + laughing + " Total 😡 :- " +
-                            angry + " Total 👎 :- " +
-                            dislike);
-                    break;
-
-
-                default:
-                    break;
-            }
+            FirebaseDatabase.getInstance().getReference().child("users").child(userKey).child("story").child(model.getPicId()).child("totalReact").child(FirebaseAuth.getInstance().getUid()).setValue(setReact);
             return true; // true is closing popup, false is requesting a new selection
         });
+        FirebaseDatabase.getInstance().getReference().child("users").child(userKey).child("story").child(model.getPicId()).child("totalReact").child(FirebaseAuth.getInstance().getUid()).child("Position").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Toast.makeText(context, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    String react = String.valueOf(task.getResult().getValue());
+                    if (react.equals("1") || react.equals("2") || react.equals("3") || react.equals("0")) {
+                        int reactPos = Integer.parseInt(react);
+                        switch (reactPos) {
+                            case 0:
+                                holder.imageView7.setImageResource(R.drawable.like);
+                                break;
+                            case 1:
+                                holder.imageView7.setImageResource(R.drawable.laughing);
+                                break;
+                            case 2:
+                                holder.imageView7.setImageResource(R.drawable.angry);
 
+                                break;
+                            case 3:
+                                holder.imageView7.setImageResource(R.drawable.dislike);
+                                break;
+                            default:
+                                holder.imageView7.setImageResource(R.drawable.like);
+                                break;
+
+                        }
+                    } else {
+                        holder.imageView7.setImageResource(R.drawable.like);
+                    }
+
+                }
+            }
+        });
+        ArrayList<GetReactModel> rect = new ArrayList<>();
+        FirebaseDatabase.getInstance().getReference().child("users").child(userKey).child("story").child(model.getPicId()).child("totalReact").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                rect.clear();
+                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+                    GetReactModel model1 = snapshot1.getValue(GetReactModel.class);
+                    rect.add(model1);
+                }
+                if (rect.isEmpty()) {
+                    if (userKey.equals(FirebaseAuth.getInstance().getUid())) {
+                        holder.imageView6.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (model.getPicId() != null) {
+
+                                    FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("story").child(model.getPicId()).removeValue();
+
+                                }
+                            }
+                        });
+                    } else {
+                        holder.imageView6.setVisibility(View.GONE);
+                    }
+//
+                }
+                else {
+                    if (userKey.equals(FirebaseAuth.getInstance().getUid())) {
+                        holder.imageView6.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (model.getPicId() != null) {
+
+                                    FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("story").child(model.getPicId()).child("totalReact").removeValue();
+                                    Toast.makeText(context, "Image React deleted .Try again To delete Your Image", Toast.LENGTH_SHORT).show();
+
+                                }
+                            }
+                        });
+                    } else {
+                        holder.imageView6.setVisibility(View.GONE);
+                    }
+                    FirebaseDatabase.getInstance().getReference().child("users").child(userKey).child("story").child(model.getPicId()).child("TotalReaction").setValue(rect.size());
+
+//                    Toast.makeText(context, "Find React", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        FirebaseDatabase.getInstance().getReference().child("users").child(userKey).child("story").child(model.getPicId()).child("TotalReaction").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Toast.makeText(context, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                } else {
+                    String TotalReaction = String.valueOf(task.getResult().getValue());
+                    if (TotalReaction.equals("null")){
+
+                    }else {
+                        holder.countlike.setText(TotalReaction);
+                    }
+
+                }
+            }
+        });
 
         holder.imageView7.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -119,7 +203,7 @@ public class adiitionalPicAdapter extends RecyclerView.Adapter<adiitionalPicAdap
             context.startActivity(intent);
         });
 
-        FirebaseDatabase.getInstance().getReference().child("users").child(model.getUserID()).child("story").child(model.getPicId()).child("picUrl").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        FirebaseDatabase.getInstance().getReference().child("users").child(userKey).child("story").child(model.getPicId()).child("picUrl").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
@@ -132,20 +216,20 @@ public class adiitionalPicAdapter extends RecyclerView.Adapter<adiitionalPicAdap
         });
 
 
-        if (model.getPicId() != null) {
-            holder.imageView6.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (model.getPicId() != null) {
-
-                        FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("story").child(model.getPicId()).removeValue();
-
-                    }
-                }
-            });
-        } else {
-            holder.imageView6.setVisibility(View.GONE);
-        }
+//        if (model.getPicId() != null) {
+//            holder.imageView6.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if (model.getPicId() != null) {
+//
+//                        FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("story").child(model.getPicId()).removeValue();
+//
+//                    }
+//                }
+//            });
+//        } else {
+//            holder.imageView6.setVisibility(View.GONE);
+//        }
 
     }
 

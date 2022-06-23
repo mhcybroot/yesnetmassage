@@ -6,6 +6,17 @@ public class videoView {
     public videoView() {
     }
 
+    public videoView(String vidoeUrl, String videoID) {
+        VidoeUrl = vidoeUrl;
+        this.videoID = videoID;
+    }
+
+    public videoView(String vidoeUrl, String userID, String videoID) {
+        VidoeUrl = vidoeUrl;
+        this.userID = userID;
+        this.videoID = videoID;
+    }
+
     public String getVidoeUrl() {
         return VidoeUrl;
     }

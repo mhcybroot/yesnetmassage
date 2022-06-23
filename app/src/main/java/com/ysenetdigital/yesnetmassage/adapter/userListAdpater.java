@@ -86,6 +86,20 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
                 if (model.getUserID().equals("yP6RgpxWbVPHrnkLNv1hdNlxVC43")) {
 
                     DocumentReference docRef = FirebaseFirestore.getInstance().collection(FirebaseAuth.getInstance().getUid()).document(FirebaseAuth.getInstance().getUid());
+                    holder.lastId.setVisibility(View.GONE);
+                    holder.MemberId.setVisibility(View.GONE);
+                    holder.Post.setVisibility(View.GONE);
+                    holder.userName.setText(model.getName());
+                    holder.add.setVisibility(View.GONE);
+                    holder.delete.setVisibility(View.GONE);
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(context, BanglaCounsellingGroup.class);
+                            context.startActivity(intent);
+                            ((Activity) context).finish();
+                        }
+                    });
                     docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -93,147 +107,176 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
                                 DocumentSnapshot document = task.getResult();
                                 if (document != null) {
                                     String cousellingStatus = document.getString("counsellingGroupStatus");
-                                    Long cousellingtime = document.getLong("counsellingGroupStopTime");
-
-                                    if (cousellingStatus != null) {
-                                        if (cousellingStatus.equals("FristJoin")) {
-                                            long time = new Date().getTime();
-                                            if (cousellingtime > time) {
-                                                holder.add.setText("Open");
-                                                holder.lastId.setVisibility(View.GONE);
-                                                holder.MemberId.setVisibility(View.GONE);
-                                                holder.Post.setVisibility(View.GONE);
-                                                holder.userName.setText(model.getName());
-                                                holder.add.setVisibility(View.GONE);
-                                                holder.delete.setVisibility(View.GONE);
-                                                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View view) {
-                                                        Intent intent = new Intent(context, BanglaCounsellingGroup.class);
-                                                        context.startActivity(intent);
-                                                    }
-                                                });
-                                            } else {
-                                                holder.add.setText("Request To Join");
-                                                holder.lastId.setVisibility(View.GONE);
-                                                holder.MemberId.setVisibility(View.GONE);
-                                                holder.Post.setVisibility(View.GONE);
-                                                holder.userName.setText(model.getName());
-                                                holder.add.setVisibility(View.VISIBLE);
-                                                holder.delete.setVisibility(View.GONE);
-                                                holder.add.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View view) {
-                                                        Map<String, String> zmap = new HashMap<>();
-                                                        zmap.put("counsellingGroupStatus", "RequestToJoin");
-                                                        memberlistmodel memberlistmodel = new memberlistmodel(FirebaseAuth.getInstance().getUid(), "Requested Permanent User");
-                                                        FirebaseDatabase.getInstance().getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(FirebaseAuth.getInstance().getUid()).setValue(memberlistmodel);
-
-                                                        FirebaseFirestore.getInstance().collection(FirebaseAuth.getInstance().getUid()).document(FirebaseAuth.getInstance().getUid()).set(zmap, SetOptions.merge());
-
-                                                    }
-                                                });
-                                            }
-                                        }
-                                        if (cousellingStatus.equals("newUser")) {
-
-                                            holder.add.setText("Join");
-                                            holder.lastId.setVisibility(View.GONE);
-                                            holder.MemberId.setVisibility(View.GONE);
-                                            holder.Post.setVisibility(View.GONE);
-                                            holder.userName.setText(model.getName());
-                                            holder.add.setVisibility(View.VISIBLE);
-                                            holder.delete.setVisibility(View.GONE);
-                                            holder.add.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View view) {
-                                                    Date counsellingStopTime = new Date(System.currentTimeMillis() + 86400 * 1000 * 2);
-                                                    long counsellingStopTime2 = counsellingStopTime.getTime();
-                                                    Map<String, Long> map = new HashMap<>();
-                                                    map.put("counsellingGroupStopTime", counsellingStopTime2);
-                                                    Map<String, String> zmap = new HashMap<>();
-                                                    zmap.put("counsellingGroupStatus", "FristJoin");
-                                                    FirebaseFirestore.getInstance().collection(FirebaseAuth.getInstance().getUid()).document(FirebaseAuth.getInstance().getUid()).set(map, SetOptions.merge());
-                                                    FirebaseFirestore.getInstance().collection(FirebaseAuth.getInstance().getUid()).document(FirebaseAuth.getInstance().getUid()).set(zmap, SetOptions.merge());
-                                                    Intent intent = new Intent(context, BanglaCounsellingGroup.class);
-                                                    ((Activity) context).finish();
-                                                    context.startActivity(intent);
-                                                }
-                                            });
-                                        }
-                                        if (cousellingStatus.equals("Block")) {
-                                            holder.itemView.setVisibility(View.GONE);
+                                    if (cousellingStatus.equals("Block")) {
+                                        holder.itemView.setVisibility(View.GONE);
                                             ViewGroup.LayoutParams params = holder.itemView.getLayoutParams();
                                             params.height = 0;
                                             params.width = 0;
                                             holder.itemView.setLayoutParams(params);
-
-                                        }
-                                        if (cousellingStatus.equals("RequestToJoin")) {
-                                            holder.add.setText("Requested");
-                                            holder.lastId.setVisibility(View.GONE);
-                                            holder.MemberId.setVisibility(View.GONE);
-                                            holder.Post.setVisibility(View.GONE);
-                                            holder.userName.setText(model.getName());
-                                            holder.add.setVisibility(View.VISIBLE);
-                                            holder.delete.setVisibility(View.GONE);
-                                            holder.add.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View view) {
-                                                    Map<String, String> zmap = new HashMap<>();
-                                                    zmap.put("CounsellingGroupStatus", "RequestToJoin");
-                                                    memberlistmodel memberlistmodel = new memberlistmodel(FirebaseAuth.getInstance().getUid(), "Requested Permanent User");
-                                                    FirebaseDatabase.getInstance().getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(FirebaseAuth.getInstance().getUid()).setValue(memberlistmodel);
-
-                                                    FirebaseFirestore.getInstance().collection(FirebaseAuth.getInstance().getUid()).document(FirebaseAuth.getInstance().getUid()).set(zmap, SetOptions.merge());
-
-                                                }
-                                            });
-                                        }
-                                        if (cousellingStatus.equals("admin")){
-                                            holder.lastId.setVisibility(View.GONE);
-                                            holder.MemberId.setVisibility(View.GONE);
-                                            holder.Post.setVisibility(View.GONE);
-                                            holder.userName.setText(model.getName());
-                                            holder.add.setVisibility(View.GONE);
-                                            holder.delete.setVisibility(View.GONE);
-                                            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View view) {
-                                                    Intent intent = new Intent(context, BanglaCounsellingGroup.class);
-                                                    context.startActivity(intent);
-                                                    ((Activity) context).finish();
-                                                }
-                                            });
-                                        }
-                                        if (cousellingStatus.equals("member")) {
-                                            holder.lastId.setVisibility(View.GONE);
-                                            holder.MemberId.setVisibility(View.GONE);
-                                            holder.Post.setVisibility(View.GONE);
-                                            holder.userName.setText(model.getName());
-                                            holder.add.setVisibility(View.GONE);
-                                            holder.delete.setVisibility(View.GONE);
-                                            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View view) {
-                                                    Intent intent = new Intent(context, BanglaCounsellingGroup.class);
-                                                    context.startActivity(intent);
-                                                    ((Activity) context).finish();
-                                                }
-                                            });
-
-                                        }
-                                    } else {
-                                        Toast.makeText(context, "null", Toast.LENGTH_SHORT).show();
+                                    }else {
+                                        holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                Intent intent = new Intent(context, BanglaCounsellingGroup.class);
+                                                context.startActivity(intent);
+                                                ((Activity) context).finish();
+                                            }
+                                        });
                                     }
-                                } else {
-                                    Toast.makeText(context, "null", Toast.LENGTH_SHORT).show();
                                 }
                             } else {
-                                Toast.makeText(context, "null", Toast.LENGTH_SHORT).show();
+
                             }
                         }
                     });
+//                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                            if (task.isSuccessful()) {
+//                                DocumentSnapshot document = task.getResult();
+//                                if (document != null) {
+//                                    String cousellingStatus = document.getString("counsellingGroupStatus");
+//                                    Long cousellingtime = document.getLong("counsellingGroupStopTime");
+//
+//                                    if (cousellingStatus != null) {
+//                                        if (cousellingStatus.equals("FristJoin")) {
+//                                            long time = new Date().getTime();
+//                                            if (cousellingtime > time) {
+//                                                holder.add.setText("Open");
+//                                                holder.lastId.setVisibility(View.GONE);
+//                                                holder.MemberId.setVisibility(View.GONE);
+//                                                holder.Post.setVisibility(View.GONE);
+//                                                holder.userName.setText(model.getName());
+//                                                holder.add.setVisibility(View.GONE);
+//                                                holder.delete.setVisibility(View.GONE);
+//                                                holder.itemView.setOnClickListener(new View.OnClickListener() {
+//                                                    @Override
+//                                                    public void onClick(View view) {
+//                                                        Intent intent = new Intent(context, BanglaCounsellingGroup.class);
+//                                                        context.startActivity(intent);
+//                                                    }
+//                                                });
+//                                            } else {
+//                                                holder.add.setText("Request To Join");
+//                                                holder.lastId.setVisibility(View.GONE);
+//                                                holder.MemberId.setVisibility(View.GONE);
+//                                                holder.Post.setVisibility(View.GONE);
+//                                                holder.userName.setText(model.getName());
+//                                                holder.add.setVisibility(View.VISIBLE);
+//                                                holder.delete.setVisibility(View.GONE);
+//                                                holder.add.setOnClickListener(new View.OnClickListener() {
+//                                                    @Override
+//                                                    public void onClick(View view) {
+//                                                        Map<String, String> zmap = new HashMap<>();
+//                                                        zmap.put("counsellingGroupStatus", "RequestToJoin");
+//                                                        memberlistmodel memberlistmodel = new memberlistmodel(FirebaseAuth.getInstance().getUid(), "Requested Permanent User");
+//                                                        FirebaseDatabase.getInstance().getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(FirebaseAuth.getInstance().getUid()).setValue(memberlistmodel);
+//
+//                                                        FirebaseFirestore.getInstance().collection(FirebaseAuth.getInstance().getUid()).document(FirebaseAuth.getInstance().getUid()).set(zmap, SetOptions.merge());
+//
+//                                                    }
+//                                                });
+//                                            }
+//                                        }
+//                                        if (cousellingStatus.equals("newUser")) {
+//
+//                                            holder.add.setText("Join");
+//                                            holder.lastId.setVisibility(View.GONE);
+//                                            holder.MemberId.setVisibility(View.GONE);
+//                                            holder.Post.setVisibility(View.GONE);
+//                                            holder.userName.setText(model.getName());
+//                                            holder.add.setVisibility(View.VISIBLE);
+//                                            holder.delete.setVisibility(View.GONE);
+//                                            holder.add.setOnClickListener(new View.OnClickListener() {
+//                                                @Override
+//                                                public void onClick(View view) {
+//                                                    Date counsellingStopTime = new Date(System.currentTimeMillis() + 86400 * 1000 * 2);
+//                                                    long counsellingStopTime2 = counsellingStopTime.getTime();
+//                                                    Map<String, Long> map = new HashMap<>();
+//                                                    map.put("counsellingGroupStopTime", counsellingStopTime2);
+//                                                    Map<String, String> zmap = new HashMap<>();
+//                                                    zmap.put("counsellingGroupStatus", "FristJoin");
+//                                                    FirebaseFirestore.getInstance().collection(FirebaseAuth.getInstance().getUid()).document(FirebaseAuth.getInstance().getUid()).set(map, SetOptions.merge());
+//                                                    FirebaseFirestore.getInstance().collection(FirebaseAuth.getInstance().getUid()).document(FirebaseAuth.getInstance().getUid()).set(zmap, SetOptions.merge());
+//                                                    Intent intent = new Intent(context, BanglaCounsellingGroup.class);
+//                                                    ((Activity) context).finish();
+//                                                    context.startActivity(intent);
+//                                                }
+//                                            });
+//                                        }
+//                                        if (cousellingStatus.equals("Block")) {
+//                                            holder.itemView.setVisibility(View.GONE);
+//                                            ViewGroup.LayoutParams params = holder.itemView.getLayoutParams();
+//                                            params.height = 0;
+//                                            params.width = 0;
+//                                            holder.itemView.setLayoutParams(params);
+//
+//                                        }
+//                                        if (cousellingStatus.equals("RequestToJoin")) {
+//                                            holder.add.setText("Requested");
+//                                            holder.lastId.setVisibility(View.GONE);
+//                                            holder.MemberId.setVisibility(View.GONE);
+//                                            holder.Post.setVisibility(View.GONE);
+//                                            holder.userName.setText(model.getName());
+//                                            holder.add.setVisibility(View.VISIBLE);
+//                                            holder.delete.setVisibility(View.GONE);
+//                                            holder.add.setOnClickListener(new View.OnClickListener() {
+//                                                @Override
+//                                                public void onClick(View view) {
+//                                                    Map<String, String> zmap = new HashMap<>();
+//                                                    zmap.put("CounsellingGroupStatus", "RequestToJoin");
+//                                                    memberlistmodel memberlistmodel = new memberlistmodel(FirebaseAuth.getInstance().getUid(), "Requested Permanent User");
+//                                                    FirebaseDatabase.getInstance().getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(FirebaseAuth.getInstance().getUid()).setValue(memberlistmodel);
+//
+//                                                    FirebaseFirestore.getInstance().collection(FirebaseAuth.getInstance().getUid()).document(FirebaseAuth.getInstance().getUid()).set(zmap, SetOptions.merge());
+//
+//                                                }
+//                                            });
+//                                        }
+//                                        if (cousellingStatus.equals("admin")){
+//                                            holder.lastId.setVisibility(View.GONE);
+//                                            holder.MemberId.setVisibility(View.GONE);
+//                                            holder.Post.setVisibility(View.GONE);
+//                                            holder.userName.setText(model.getName());
+//                                            holder.add.setVisibility(View.GONE);
+//                                            holder.delete.setVisibility(View.GONE);
+//                                            holder.itemView.setOnClickListener(new View.OnClickListener() {
+//                                                @Override
+//                                                public void onClick(View view) {
+//                                                    Intent intent = new Intent(context, BanglaCounsellingGroup.class);
+//                                                    context.startActivity(intent);
+//                                                    ((Activity) context).finish();
+//                                                }
+//                                            });
+//                                        }
+//                                        if (cousellingStatus.equals("member")) {
+//                                            holder.lastId.setVisibility(View.GONE);
+//                                            holder.MemberId.setVisibility(View.GONE);
+//                                            holder.Post.setVisibility(View.GONE);
+//                                            holder.userName.setText(model.getName());
+//                                            holder.add.setVisibility(View.GONE);
+//                                            holder.delete.setVisibility(View.GONE);
+//                                            holder.itemView.setOnClickListener(new View.OnClickListener() {
+//                                                @Override
+//                                                public void onClick(View view) {
+//                                                    Intent intent = new Intent(context, BanglaCounsellingGroup.class);
+//                                                    context.startActivity(intent);
+//                                                    ((Activity) context).finish();
+//                                                }
+//                                            });
+//
+//                                        }
+//                                    } else {
+//                                        Toast.makeText(context, "null", Toast.LENGTH_SHORT).show();
+//                                    }
+//                                } else {
+//                                    Toast.makeText(context, "null", Toast.LENGTH_SHORT).show();
+//                                }
+//                            } else {
+//                                Toast.makeText(context, "null", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
 
 
 //                if (model.getCounsellingGroupStatus() != null) {
@@ -352,103 +395,104 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
                     });
 
 
-                    FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("NickName").child(model.getReciverID()).child("NickName").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DataSnapshot> task) {
-                            if (task.isSuccessful()) {
+//                    FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("NickName").child(model.getReciverID()).child("NickName").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                            if (task.isSuccessful()) {
+//
+//                                String nickName = String.valueOf(task.getResult().getValue());
+//
+//                                if (nickName == null) {
+//                                    FirebaseDatabase.getInstance().getReference().child("users").child(model.getReciverID()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//                                        @Override
+//                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                                            if (task.isSuccessful()) {
+//                                                String username = String.valueOf(task.getResult().getValue());
+//                                                holder.userName.setText(username);
+//                                            } else {
+//                                                Toast.makeText(context, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//                                            }
+//                                        }
+//                                    });
+//
+//                                } else if (nickName.equals("null")) {
+//                                    FirebaseDatabase.getInstance().getReference().child("users").child(model.getReciverID()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//                                        @Override
+//                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                                            if (task.isSuccessful()) {
+//                                                String username = String.valueOf(task.getResult().getValue());
+//                                                holder.userName.setText(username);
+//                                            } else {
+//                                                Toast.makeText(context, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//                                            }
+//                                        }
+//                                    });
+//
+//                                } else {
+//                                    holder.userName.setText(nickName);
+//
+//                                }
+//
+//                                holder.userName.setOnLongClickListener(new View.OnLongClickListener() {
+//                                    @Override
+//                                    public boolean onLongClick(View view) {
+//
+//                                        holder.simple_edit_user_name.setVisibility(View.VISIBLE);
+//                                        holder.laoppp.setVisibility(View.VISIBLE);
+//                                        holder.userName.setVisibility(View.GONE);
+//                                        holder.lastId.setVisibility(View.GONE);
+//                                        holder.MemberId.setVisibility(View.GONE);
+//                                        holder.delete.setVisibility(View.GONE);
+//                                        holder.Post.setVisibility(View.GONE);
+//                                        holder.add.setVisibility(View.VISIBLE);
+//                                        holder.add.setText("submit");
+//                                        holder.add.setOnClickListener(new View.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(View view) {
+//                                                String nickname = holder.simple_edit_user_name.getText().toString();
+//
+//                                                if (nickname.isEmpty()) {
+//                                                    holder.simple_edit_user_name.setError("Nick Name required");
+//                                                    holder.simple_edit_user_name.requestFocus();
+//                                                } else {
+//                                                    holder.simple_edit_user_name.setVisibility(View.GONE);
+//                                                    holder.simple_edit_user_name.setText("");
+//                                                    holder.laoppp.setVisibility(View.GONE);
+//                                                    holder.userName.setVisibility(View.VISIBLE);
+//                                                    holder.lastId.setVisibility(View.VISIBLE);
+//                                                    holder.MemberId.setVisibility(View.VISIBLE);
+//                                                    holder.delete.setVisibility(View.VISIBLE);
+//                                                    holder.Post.setVisibility(View.VISIBLE);
+//                                                    holder.add.setVisibility(View.GONE);
+//                                                    holder.add.setText("submit");
+//                                                    holder.userName.setText(nickname);
+//                                                    FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("NickName").child(model.getSenderID()).child("NickName").setValue(nickname);
+//                                                }
+//
+//                                            }
+//                                        });
+//
+//
+//                                        return false;
+//                                    }
+//                                });
+//                            } else {
+//                                FirebaseDatabase.getInstance().getReference().child("users").child(model.getReciverID()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                                        if (task.isSuccessful()) {
+//                                            String username = String.valueOf(task.getResult().getValue());
+//                                            holder.userName.setText(username);
+//                                        } else {
+//                                            Toast.makeText(context, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//                                        }
+//                                    }
+//                                });
+//                                Toast.makeText(context, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
 
-                                String nickName = String.valueOf(task.getResult().getValue());
-
-                                if (nickName == null) {
-                                    FirebaseDatabase.getInstance().getReference().child("users").child(model.getReciverID()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                String username = String.valueOf(task.getResult().getValue());
-                                                holder.userName.setText(username);
-                                            } else {
-                                                Toast.makeText(context, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-                                    });
-
-                                } else if (nickName.equals("null")) {
-                                    FirebaseDatabase.getInstance().getReference().child("users").child(model.getReciverID()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                String username = String.valueOf(task.getResult().getValue());
-                                                holder.userName.setText(username);
-                                            } else {
-                                                Toast.makeText(context, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-                                    });
-
-                                } else {
-                                    holder.userName.setText(nickName);
-
-                                }
-
-                                holder.userName.setOnLongClickListener(new View.OnLongClickListener() {
-                                    @Override
-                                    public boolean onLongClick(View view) {
-
-                                        holder.simple_edit_user_name.setVisibility(View.VISIBLE);
-                                        holder.laoppp.setVisibility(View.VISIBLE);
-                                        holder.userName.setVisibility(View.GONE);
-                                        holder.lastId.setVisibility(View.GONE);
-                                        holder.MemberId.setVisibility(View.GONE);
-                                        holder.delete.setVisibility(View.GONE);
-                                        holder.Post.setVisibility(View.GONE);
-                                        holder.add.setVisibility(View.VISIBLE);
-                                        holder.add.setText("submit");
-                                        holder.add.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View view) {
-                                                String nickname = holder.simple_edit_user_name.getText().toString();
-
-                                                if (nickname.isEmpty()) {
-                                                    holder.simple_edit_user_name.setError("Nick Name required");
-                                                    holder.simple_edit_user_name.requestFocus();
-                                                } else {
-                                                    holder.simple_edit_user_name.setVisibility(View.GONE);
-                                                    holder.simple_edit_user_name.setText("");
-                                                    holder.laoppp.setVisibility(View.GONE);
-                                                    holder.userName.setVisibility(View.VISIBLE);
-                                                    holder.lastId.setVisibility(View.VISIBLE);
-                                                    holder.MemberId.setVisibility(View.VISIBLE);
-                                                    holder.delete.setVisibility(View.VISIBLE);
-                                                    holder.Post.setVisibility(View.VISIBLE);
-                                                    holder.add.setVisibility(View.GONE);
-                                                    holder.add.setText("submit");
-                                                    holder.userName.setText(nickname);
-                                                    FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("NickName").child(model.getSenderID()).child("NickName").setValue(nickname);
-                                                }
-
-                                            }
-                                        });
-
-
-                                        return false;
-                                    }
-                                });
-                            } else {
-                                FirebaseDatabase.getInstance().getReference().child("users").child(model.getReciverID()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            String username = String.valueOf(task.getResult().getValue());
-                                            holder.userName.setText(username);
-                                        } else {
-                                            Toast.makeText(context, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
-                                Toast.makeText(context, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
 
                     FirebaseDatabase.getInstance().getReference().child("chats").child(model.getReciverID() + FirebaseAuth.getInstance().getUid()).orderByChild("timestamp").limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -677,7 +721,7 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
 
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(context, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
         }
 

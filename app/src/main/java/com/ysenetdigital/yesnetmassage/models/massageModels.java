@@ -2,7 +2,7 @@ package com.ysenetdigital.yesnetmassage.models;
 
 public class massageModels {
     String uId;
-
+String post;
     String Reciever;
 
     String massageID;
@@ -66,6 +66,14 @@ public class massageModels {
     }
 
     public massageModels() {
+    }
+
+    public String getPost() {
+        return post;
+    }
+
+    public void setPost(String post) {
+        this.post = post;
     }
 
     public boolean isIsseen() {

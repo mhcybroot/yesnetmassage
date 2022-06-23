@@ -49,7 +49,7 @@ ImageView proPic;
         auth = FirebaseAuth.getInstance();
         ArrayList<additional_pic> list = new ArrayList<>();
         ArrayList<videoView> videoViewArrayList =new ArrayList<>();
-        final videoViewAdapter videoadapter = new videoViewAdapter(this,videoViewArrayList);
+        final videoViewAdapter videoadapter = new videoViewAdapter(this,videoViewArrayList,userId);
         binding.userVideoRecycler.setAdapter(videoadapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         binding.userVideoRecycler.setLayoutManager(linearLayoutManager);
@@ -60,14 +60,15 @@ ImageView proPic;
                 for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                     videoView videoView = snapshot1.getValue(videoView.class);
                     videoViewArrayList.add(videoView);
+                    videoView.setVideoID(snapshot1.getKey());
                 }
 
 
-                if (videoViewArrayList.isEmpty() ){
-                    Toast.makeText(getApplicationContext(), "not find any video", Toast.LENGTH_SHORT).show();
-                }else {
-                    Toast.makeText(getApplicationContext(), "find video list ", Toast.LENGTH_SHORT).show();
-                }
+//                if (videoViewArrayList.isEmpty() ){
+//                    Toast.makeText(getApplicationContext(), "not find any video", Toast.LENGTH_SHORT).show();
+//                }else {
+//                    Toast.makeText(getApplicationContext(), "find video list ", Toast.LENGTH_SHORT).show();
+//                }
                 videoadapter.notifyDataSetChanged();
             }
 
@@ -106,9 +107,9 @@ ImageView proPic;
 //            }
 //        });
 
-        final adiitionalPicAdapter adiitionalPicAdapter = new adiitionalPicAdapter(this, list);
+        final adiitionalPicAdapter adiitionalPicAdapter = new adiitionalPicAdapter(this, list,userId);
         binding.userImageRecycler.setAdapter(adiitionalPicAdapter);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
         binding.userImageRecycler.setLayoutManager(gridLayoutManager);
         proPic = findViewById(R.id.imageViewer_image);
 
@@ -124,6 +125,7 @@ ImageView proPic;
                 for (DataSnapshot snapshot1 : snapshot.getChildren()) {
                     additional_pic model1 = snapshot1.getValue(additional_pic.class);
                     list.add(model1);
+                    model1.setPicId(snapshot1.getKey());
                 }
 
                 adiitionalPicAdapter.notifyDataSetChanged();

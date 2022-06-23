@@ -4,7 +4,20 @@ public class additional_pic {
     String picUrl;
 String picId;
 String userID;
+
     public additional_pic() {
+    }
+
+
+    public additional_pic(String picUrl, String picId) {
+        this.picUrl = picUrl;
+        this.picId = picId;
+    }
+
+    public additional_pic(String picUrl, String picId, String userID) {
+        this.picUrl = picUrl;
+        this.picId = picId;
+        this.userID = userID;
     }
 
     public String getUserID() {
