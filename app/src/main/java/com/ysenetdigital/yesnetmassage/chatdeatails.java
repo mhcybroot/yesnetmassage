@@ -138,7 +138,7 @@ public class chatdeatails extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                FirebaseDatabase.getInstance().getReference().child("presence").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).setValue("Typing....");
+                database.getReference().child("presence").child(Objects.requireNonNull(auth.getUid())).setValue("Typing....");
 
                 handler.removeCallbacksAndMessages(null);
                 handler.postDelayed(userTypingStop, 1000);
@@ -148,7 +148,7 @@ public class chatdeatails extends AppCompatActivity {
             Runnable userTypingStop = new Runnable() {
                 @Override
                 public void run() {
-                    FirebaseDatabase.getInstance().getReference().child("presence").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).setValue("Online");
+                    database.getReference().child("presence").child(Objects.requireNonNull(auth.getUid())).setValue("Online");
 
                 }
             };
@@ -235,14 +235,14 @@ public class chatdeatails extends AppCompatActivity {
                                     String datayime = Long.toString(time);
                                     Map<String, Long> item = new HashMap<>();
                                     item.put("lastMassageTime",new Date().getTime());
-                                    FirebaseFirestore.getInstance().collection(FirebaseAuth.getInstance().getUid()).document(reciveID).set(item, SetOptions.merge());
-                                    FirebaseFirestore.getInstance().collection(reciveID).document(FirebaseAuth.getInstance().getUid()).set(item,SetOptions.merge());
-                                    FirebaseDatabase.getInstance().getReference().child("users").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child("Friends").child(reciveID).child("timeofmassage").setValue(datayime);
-                                    FirebaseDatabase.getInstance().getReference().child("users").child(reciveID).child("Friends").child(FirebaseAuth.getInstance().getUid()).child("timeofmassage").setValue(datayime);
+                                    FirebaseFirestore.getInstance().collection(auth.getUid()).document(reciveID).set(item, SetOptions.merge());
+                                    FirebaseFirestore.getInstance().collection(reciveID).document(auth.getUid()).set(item,SetOptions.merge());
+                                    database.getReference().child("users").child(Objects.requireNonNull(auth.getUid())).child("Friends").child(reciveID).child("timeofmassage").setValue(datayime);
+                                    database.getReference().child("users").child(reciveID).child("Friends").child(auth.getUid()).child("timeofmassage").setValue(datayime);
 
-//                                    database.getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("total_reply").setValue()
-//                                    database.getReference().child("users").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child("total_reply").setValue("1");
-                                    database.getReference().child("users").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child("total_reply").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//                                    database.getReference().child("users").child(auth.getUid()).child("total_reply").setValue()
+//                                    database.getReference().child("users").child(Objects.requireNonNull(auth.getUid())).child("total_reply").setValue("1");
+                                    database.getReference().child("users").child(Objects.requireNonNull(auth.getUid())).child("total_reply").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                         @Override
                                         public void onComplete(@NonNull Task<DataSnapshot> task) {
                                             if (!task.isSuccessful()) {
@@ -252,11 +252,11 @@ public class chatdeatails extends AppCompatActivity {
                                                     int totalreply = task.getResult().getValue(Integer.class);
 
                                                         int final_value = totalreply + 1;
-                                                        database.getReference().child("users").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child("total_reply").setValue(final_value);
+                                                        database.getReference().child("users").child(Objects.requireNonNull(auth.getUid())).child("total_reply").setValue(final_value);
 
 
                                                 }catch (Exception e){
-                                                    database.getReference().child("users").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child("total_reply").setValue(1);
+                                                    database.getReference().child("users").child(Objects.requireNonNull(auth.getUid())).child("total_reply").setValue(1);
 
                                                 }
 
@@ -291,7 +291,7 @@ public class chatdeatails extends AppCompatActivity {
 
     private void seenMessage(final String friendid) {
 
-        referenceMassage = FirebaseDatabase.getInstance().getReference().child("chats").child(receiverroom);
+        referenceMassage = database.getReference().child("chats").child(receiverroom);
 
 
         seenlistener = referenceMassage.addValueEventListener(new ValueEventListener() {
@@ -364,7 +364,7 @@ public class chatdeatails extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        FirebaseDatabase.getInstance().getReference().child("presence").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).setValue("Online");
+        database.getReference().child("presence").child(Objects.requireNonNull(auth.getUid())).setValue("Online");
         // No Internet Snackbar
         NoInternetSnackbar.Builder builder2 = new NoInternetSnackbar.Builder(this, (ViewGroup) findViewById(android.R.id.content));
 
@@ -388,7 +388,7 @@ public class chatdeatails extends AppCompatActivity {
     @Override
     protected void onPause() {
         referenceMassage.removeEventListener(seenlistener);
-        FirebaseDatabase.getInstance().getReference().child("presence").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).setValue("Offline");
+        database.getReference().child("presence").child(Objects.requireNonNull(auth.getUid())).setValue("Offline");
         if (noInternetSnackbar != null) {
             noInternetSnackbar.destroy();
         }
@@ -398,13 +398,13 @@ public class chatdeatails extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseDatabase.getInstance().getReference().child("presence").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).setValue("Online");
+        database.getReference().child("presence").child(Objects.requireNonNull(auth.getUid())).setValue("Online");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        FirebaseDatabase.getInstance().getReference().child("presence").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).setValue("Online");
+        database.getReference().child("presence").child(Objects.requireNonNull(auth.getUid())).setValue("Online");
 
     }
 
@@ -427,7 +427,7 @@ public class chatdeatails extends AppCompatActivity {
                     if (selectedImage != null) {
                         Calendar calenda = Calendar.getInstance();
                         rendomkey = database.getReference().push().getKey();
-                        StorageReference reference = FirebaseStorage.getInstance().getReference().child("chats").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child(rendomkey);
+                        StorageReference reference = FirebaseStorage.getInstance().getReference().child("chats").child(Objects.requireNonNull(auth.getUid())).child(rendomkey);
                         reference.putFile(selectedImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.ysenetdigital.yesnetmassage.adapter.MemberFregmentAdapter;
 import com.ysenetdigital.yesnetmassage.databinding.FragmentMembersBinding;
@@ -29,7 +30,7 @@ public class Members extends Fragment {
     FragmentMembersBinding binding;
     ArrayList<signup_models> list = new ArrayList<>();
     FirebaseDatabase database;
-
+    FirebaseAuth auth;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,15 +39,15 @@ public class Members extends Fragment {
 
 
         // Inflate the layout for this fragment
-
-    try {
-        binding = FragmentMembersBinding.inflate(inflater, container, false);
-        binding.viewPageMember.setAdapter(new MemberFregmentAdapter(getActivity().getSupportFragmentManager()));
-        binding.tabLayoutMember.setupWithViewPager(binding.viewPageMember);
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-    }catch (Exception e ){
-        Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-    }
+        auth = FirebaseAuth.getInstance();
+        try {
+            binding = FragmentMembersBinding.inflate(inflater, container, false);
+            binding.viewPageMember.setAdapter(new MemberFregmentAdapter(getActivity().getSupportFragmentManager()));
+            binding.tabLayoutMember.setupWithViewPager(binding.viewPageMember);
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+        } catch (Exception e) {
+            Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+        }
 
 //       SharedPreferences.Editor editor2 = sharedmain.edit();
 
@@ -141,7 +142,7 @@ public class Members extends Fragment {
 //                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 //                    signup_models models = dataSnapshot.getValue(signup_models.class);
 //                    if (models.getPost().contains("Member")) {
-//                        if (models.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+//                        if (models.getUserID().equals(auth.getCurrentUser().getUid())) {
 //                        } else {
 //                            models.setUserID(dataSnapshot.getKey());
 //                            list.add(models);
@@ -170,7 +171,7 @@ public class Members extends Fragment {
 //                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 //                            signup_models models = dataSnapshot.getValue(signup_models.class);
 //                            if (models.getPost().contains("Member")) {
-//                                if (models.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+//                                if (models.getUserID().equals(auth.getCurrentUser().getUid())) {
 //                                } else {
 //                                    models.setUserID(dataSnapshot.getKey());
 //                                    list.add(models);
@@ -193,7 +194,7 @@ public class Members extends Fragment {
 //            public void onClick(View view) {
 //                userAdapters adapters = new userAdapters(list, getContext(), 2);
 //                binding.membersRecyclerView.setAdapter(adapters);
-//                database.getReference().child("users").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child("Friends").addValueEventListener(new ValueEventListener() {
+//                database.getReference().child("users").child(Objects.requireNonNull(auth.getUid())).child("Friends").addValueEventListener(new ValueEventListener() {
 //                    @Override
 //                    public void onDataChange(@NonNull DataSnapshot snapshot) {
 //                        list.clear();

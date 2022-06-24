@@ -22,13 +22,13 @@ import java.util.ArrayList;
 
 public class MemberList extends AppCompatActivity {
     ActivityMemberListBinding binding;
-
+FirebaseAuth auth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMemberListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+auth = FirebaseAuth.getInstance();
         ArrayList<memberlistmodel> list = new ArrayList<>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         binding.memberlistrecyclerView.setLayoutManager(linearLayoutManager);
@@ -48,7 +48,7 @@ public class MemberList extends AppCompatActivity {
                                 memberlistmodel datalist = snapshot1.getValue(memberlistmodel.class);
 
                                 if (datalist.getId() != null) {
-                                    if (datalist.getId().equals(FirebaseAuth.getInstance().getUid())) {
+                                    if (datalist.getId().equals(auth.getUid())) {
 
                                     } else {
 
@@ -95,7 +95,7 @@ public class MemberList extends AppCompatActivity {
                                 memberlistmodel datalist = snapshot1.getValue(memberlistmodel.class);
 
                                 if (datalist.getId() != null) {
-                                    if (datalist.getId().equals(FirebaseAuth.getInstance().getUid())) {
+                                    if (datalist.getId().equals(auth.getUid())) {
 
                                     } else {
 

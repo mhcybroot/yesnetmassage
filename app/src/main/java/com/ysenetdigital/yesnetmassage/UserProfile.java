@@ -64,16 +64,16 @@ public class UserProfile extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         auth = FirebaseAuth.getInstance();
         ArrayList<additional_pic> list = new ArrayList<>();
-        final adiitionalPicAdapter adiitionalPicAdapter = new adiitionalPicAdapter(this, list,FirebaseAuth.getInstance().getUid());
+        final adiitionalPicAdapter adiitionalPicAdapter = new adiitionalPicAdapter(this, list,auth.getUid());
         binding.addpicProfile.setAdapter(adiitionalPicAdapter);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
         binding.addpicProfile.setLayoutManager(gridLayoutManager);
         ArrayList<videoView> videoViewArrayList =new ArrayList<>();
-        final videoViewAdapter videoadapter = new videoViewAdapter(this,videoViewArrayList,FirebaseAuth.getInstance().getUid());
+        final videoViewAdapter videoadapter = new videoViewAdapter(this,videoViewArrayList,auth.getUid());
         binding.userImageRecyclerVIdeo.setAdapter(videoadapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         binding.userImageRecyclerVIdeo.setLayoutManager(linearLayoutManager);
-        FirebaseDatabase.getInstance().getReference().child("users").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child("storyVideo").addValueEventListener(new ValueEventListener() {
+        database.getReference().child("users").child(Objects.requireNonNull(auth.getUid())).child("storyVideo").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 videoViewArrayList.clear();
@@ -344,7 +344,7 @@ public class UserProfile extends AppCompatActivity {
 
                         Calendar calendar = new GregorianCalendar();
                         String rendomKey = String.valueOf(calendar.getTimeInMillis());
-                        StorageReference references = FirebaseStorage.getInstance().getReference().child("story").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child(rendomKey);
+                        StorageReference references = FirebaseStorage.getInstance().getReference().child("story").child(Objects.requireNonNull(auth.getUid())).child(rendomKey);
                         references.putFile(selectedImages).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -354,11 +354,11 @@ public class UserProfile extends AppCompatActivity {
                                         String imageUrl = uri.toString();
                                         HashMap<String, Object> map = new HashMap<>();
                                         map.put("picUrl", imageUrl);
-                                        map.put("userID",FirebaseAuth.getInstance().getUid());
+                                        map.put("userID",auth.getUid());
                                         HashMap<String, Object> pic = new HashMap<>();
                                         map.put("pic", imageUrl);
-                                        map.put("userID",FirebaseAuth.getInstance().getUid());
-                                        FirebaseFirestore.getInstance().collection(FirebaseAuth.getInstance().getUid()).document(FirebaseAuth.getInstance().getUid()).set(pic, SetOptions.merge());
+                                        map.put("userID",auth.getUid());
+                                        FirebaseFirestore.getInstance().collection(auth.getUid()).document(auth.getUid()).set(pic, SetOptions.merge());
 
                                         database.getReference().child("users").child(auth.getCurrentUser().getUid()).child("story").push().setValue(map).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
@@ -403,7 +403,7 @@ public class UserProfile extends AppCompatActivity {
                     String rendompush = String.valueOf(calendar.getTimeInMillis());
 
                     if (selectedVideo != null) {
-                        StorageReference references = FirebaseStorage.getInstance().getReference().child("storyVideo").child(FirebaseAuth.getInstance().getUid()).child(rendompush);
+                        StorageReference references = FirebaseStorage.getInstance().getReference().child("storyVideo").child(auth.getUid()).child(rendompush);
                         references.putFile(selectedVideo).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -413,10 +413,10 @@ public class UserProfile extends AppCompatActivity {
                                         String imageUrl = uri.toString();
                                         HashMap<String, Object> maps = new HashMap<>();
                                         maps.put("VidoeUrl", imageUrl);
-                                        maps.put("userID",FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                        maps.put("userID",auth.getCurrentUser().getUid());
 //                                        HashMap<String, Object> pic = new HashMap<>();
 //                                        map.put("pic", imageUrl);
-//                                        map.put("userID",FirebaseAuth.getInstance().getCurrentUser().getUid());
+//                                        map.put("userID",auth.getCurrentUser().getUid());
 
                                         database.getReference().child("users").child(auth.getCurrentUser().getUid()).child("storyVideo").push().setValue(maps).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override

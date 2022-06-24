@@ -35,7 +35,7 @@ public class FriendRequest extends Fragment {
     ArrayList<signup_models> list = new ArrayList<>();
     FirebaseDatabase database;
     ProgressDialog progressDialog;
-
+FirebaseAuth auth;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ public class FriendRequest extends Fragment {
         binding = FragmentFriendRequestBinding.inflate(inflater, container, false);
         try {
 
-
+auth = FirebaseAuth.getInstance();
             database = FirebaseDatabase.getInstance();
             userAdapters adapters = new userAdapters(list, getContext(), 2);
             binding.requestFriendRecyclerView.setAdapter(adapters);
@@ -52,7 +52,7 @@ public class FriendRequest extends Fragment {
             progressDialog = new ProgressDialog(getContext());
             progressDialog.setMessage("Loding ......");
 
-            database.getReference().child("users").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child("Friends").addValueEventListener(new ValueEventListener() {
+            database.getReference().child("users").child(Objects.requireNonNull(auth.getUid())).child("Friends").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     list.clear();
@@ -68,10 +68,10 @@ public class FriendRequest extends Fragment {
                         }
 
                         if (list.isEmpty()) {
-                            FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("TotalRequestFriendFrom").setValue(0);
+                            database.getReference().child("users").child(auth.getUid()).child("TotalRequestFriendFrom").setValue(0);
 
                         } else {
-                            FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("TotalRequestFriendFrom").setValue(list.size());
+                            database.getReference().child("users").child(auth.getUid()).child("TotalRequestFriendFrom").setValue(list.size());
                         }
                     }
                     adapters.notifyDataSetChanged();

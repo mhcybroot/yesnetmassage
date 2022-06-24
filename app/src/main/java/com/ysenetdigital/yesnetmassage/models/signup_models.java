@@ -1,11 +1,15 @@
 package com.ysenetdigital.yesnetmassage.models;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class signup_models {
 
     String profilepic,username,userID,memberId,email,password,lastmassage,post,verification,friend,request_friend,block,token,phoneNumber,accept,timeofmassage;
     long lastmassagetime;
-    int total_reply=0;
+    int total_reply=0,TotalRequestFriendFrom=0,TotalFriend=0,TotalRequestFriend;
 Integer totalRefer=0;
+
   public signup_models() {
 
     }
@@ -47,6 +51,7 @@ Integer totalRefer=0;
         this.post = post;
     }
 
+
     public signup_models(String username, String userID, String memberId, String email, String password, String post, String verification, String phoneNumber) {
         this.username = username;
         this.userID = userID;
@@ -58,7 +63,6 @@ Integer totalRefer=0;
         this.phoneNumber = phoneNumber;
     }
 
-
     public signup_models(String profilepic, String username, String userID, String memberId, String email, String password, String lastmassage, String post, String verification) {
         this.profilepic = profilepic;
         this.username = username;
@@ -69,6 +73,14 @@ Integer totalRefer=0;
         this.lastmassage = lastmassage;
         this.post = post;
         this.verification = verification;
+    }
+
+    public int getTotalRequestFriend() {
+        return TotalRequestFriend;
+    }
+
+    public void setTotalRequestFriend(int totalRequestFriend) {
+        TotalRequestFriend = totalRequestFriend;
     }
 
     public Integer getTotalRefer() {
@@ -110,6 +122,24 @@ Integer totalRefer=0;
     public void setTotal_reply(int total_reply) {
         this.total_reply = total_reply;
     }
+
+    public int getTotalRequestFriendFrom() {
+        return TotalRequestFriendFrom;
+    }
+
+    public void setTotalRequestFriendFrom(int totalRequestFriendFrom) {
+        TotalRequestFriendFrom = totalRequestFriendFrom;
+    }
+
+    public int getTotalFriend() {
+        return TotalFriend;
+    }
+
+    public void setTotalFriend(int totalFriend) {
+        TotalFriend = totalFriend;
+    }
+
+
 
     public String getToken() {
         return token;

@@ -53,7 +53,8 @@ public class videoViewAdapter extends RecyclerView.Adapter<videoViewAdapter.view
     Context context;
     ArrayList<videoView> list = new ArrayList<>();
     String userKey;
-
+FirebaseDatabase database;
+FirebaseAuth auth;
     public videoViewAdapter(Context context, ArrayList<videoView> list, String userKey) {
         this.context = context;
         this.list = list;
@@ -71,6 +72,8 @@ public class videoViewAdapter extends RecyclerView.Adapter<videoViewAdapter.view
     @Override
     public void onBindViewHolder(@NonNull viewholder holder, int position) {
         videoView model = list.get(position);
+        database = FirebaseDatabase.getInstance();
+        auth = FirebaseAuth.getInstance();
 //        Toast.makeText(context, model.getVideoID(), Toast.LENGTH_SHORT).show();
         ReactionsConfig config = new ReactionsConfigBuilder(context)
                 .withReactions(new int[]{
@@ -88,7 +91,7 @@ public class videoViewAdapter extends RecyclerView.Adapter<videoViewAdapter.view
 //    if (model.getVideoID()==null){
 //
 //    }else {
-//        FirebaseDatabase.getInstance().getReference().child("users").child(Objects.requireNonNull(model.getUserID())).child("storyVideo").child(Objects.requireNonNull(model.getVideoID())).child("Total_Like").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//        database.getReference().child("users").child(Objects.requireNonNull(model.getUserID())).child("storyVideo").child(Objects.requireNonNull(model.getVideoID())).child("Total_Like").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
 //            @Override
 //            public void onComplete(@NonNull Task<DataSnapshot> task) {
 //                if (!task.isSuccessful()) {
@@ -105,7 +108,7 @@ public class videoViewAdapter extends RecyclerView.Adapter<videoViewAdapter.view
 //                }
 //            }
 //        });
-//        FirebaseDatabase.getInstance().getReference().child("users").child(Objects.requireNonNull(model.getUserID())).child("storyVideo").child(Objects.requireNonNull(model.getVideoID())).child("total_angry").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//        database.getReference().child("users").child(Objects.requireNonNull(model.getUserID())).child("storyVideo").child(Objects.requireNonNull(model.getVideoID())).child("total_angry").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
 //            @Override
 //            public void onComplete(@NonNull Task<DataSnapshot> task) {
 //                if (!task.isSuccessful()) {
@@ -121,7 +124,7 @@ public class videoViewAdapter extends RecyclerView.Adapter<videoViewAdapter.view
 //                }
 //            }
 //        });
-//        FirebaseDatabase.getInstance().getReference().child("users").child(Objects.requireNonNull(model.getUserID())).child("storyVideo").child(Objects.requireNonNull(model.getVideoID())).child("total_laughing").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//        database.getReference().child("users").child(Objects.requireNonNull(model.getUserID())).child("storyVideo").child(Objects.requireNonNull(model.getVideoID())).child("total_laughing").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
 //            @Override
 //            public void onComplete(@NonNull Task<DataSnapshot> task) {
 //                if (!task.isSuccessful()) {
@@ -137,7 +140,7 @@ public class videoViewAdapter extends RecyclerView.Adapter<videoViewAdapter.view
 //                }
 //            }
 //        });
-//        FirebaseDatabase.getInstance().getReference().child("users").child(Objects.requireNonNull(model.getUserID())).child("storyVideo").child(Objects.requireNonNull(model.getVideoID())).child("total_dislike").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//        database.getReference().child("users").child(Objects.requireNonNull(model.getUserID())).child("storyVideo").child(Objects.requireNonNull(model.getVideoID())).child("total_dislike").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
 //            @Override
 //            public void onComplete(@NonNull Task<DataSnapshot> task) {
 //                if (!task.isSuccessful()) {
@@ -156,37 +159,37 @@ public class videoViewAdapter extends RecyclerView.Adapter<videoViewAdapter.view
 //        switch (positio) {
 //                case 0:
 //
-////                    FirebaseDatabase.getInstance().getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("Total_Like").setValue(total_like + 1);
+////                    database.getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("Total_Like").setValue(total_like + 1);
 ////                    Map<String, String> maptotal_like = new HashMap<>();
-////                    maptotal_like.put(FirebaseAuth.getInstance().getUid(), "like");
-////                    FirebaseDatabase.getInstance().getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("likedUser").setValue(maptotal_like);
+////                    maptotal_like.put(auth.getUid(), "like");
+////                    database.getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("likedUser").setValue(maptotal_like);
 //                    holder.countlike.setText(" Total 👍 :- " + total_like + " Total 😆 :- " + total_laughing + " Total 😡 :- " +
 //                            total_angry + " Total 👎 :- " +
 //                            total_dislike);
 //                    break;
 //                case 1:
-////                    FirebaseDatabase.getInstance().getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("total_angry").setValue(total_angry + 1);
+////                    database.getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("total_angry").setValue(total_angry + 1);
 ////                    Map<String, String> maptotal_angry = new HashMap<>();
-////                    maptotal_angry.put(FirebaseAuth.getInstance().getUid(), "angry");
-////                    FirebaseDatabase.getInstance().getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("likedUser").setValue(maptotal_angry);
+////                    maptotal_angry.put(auth.getUid(), "angry");
+////                    database.getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("likedUser").setValue(maptotal_angry);
 //                    holder.countlike.setText(" Total 👍 :- " + total_like + " Total 😆 :- " + total_laughing + " Total 😡 :- " +
 //                            total_angry + " Total 👎 :- " +
 //                            total_dislike);
 //                    break;
 //                case 2:
-////                    FirebaseDatabase.getInstance().getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("total_laughing").setValue(total_laughing + 1);
+////                    database.getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("total_laughing").setValue(total_laughing + 1);
 ////                    Map<String, String> maptotal_laughing = new HashMap<>();
-////                    maptotal_laughing.put(FirebaseAuth.getInstance().getUid(), "laughing");
-////                    FirebaseDatabase.getInstance().getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("likedUser").setValue(maptotal_laughing);
+////                    maptotal_laughing.put(auth.getUid(), "laughing");
+////                    database.getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("likedUser").setValue(maptotal_laughing);
 //                    holder.countlike.setText(" Total 👍 :- " + total_like + " Total 😆 :- " + total_laughing + " Total 😡 :- " +
 //                            total_angry + " Total 👎 :- " +
 //                            total_dislike);
 //                    break;
 //                case 3:
-////                    FirebaseDatabase.getInstance().getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("total_dislike").setValue(total_dislike + 1);
+////                    database.getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("total_dislike").setValue(total_dislike + 1);
 ////                    Map<String, String> maptotal_dislike = new HashMap<>();
-////                    maptotal_dislike.put(FirebaseAuth.getInstance().getUid(), "dislike");
-////                    FirebaseDatabase.getInstance().getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("likedUser").setValue(maptotal_dislike);
+////                    maptotal_dislike.put(auth.getUid(), "dislike");
+////                    database.getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("likedUser").setValue(maptotal_dislike);
 //                    holder.countlike.setText(" Total 👍 :- " + total_like + " Total 😆 :- " + total_laughing + " Total 😡 :- " +
 //                            total_angry + " Total 👎 :- " +
 //                            total_dislike);
@@ -202,13 +205,13 @@ public class videoViewAdapter extends RecyclerView.Adapter<videoViewAdapter.view
             Map<String, Integer> setReact = new HashMap<>();
             setReact.put("Position", positio);
 
-            FirebaseDatabase.getInstance().getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("totalReact").child(FirebaseAuth.getInstance().getUid()).setValue(setReact);
+            database.getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("totalReact").child(auth.getUid()).setValue(setReact);
             return true; // true is closing popup, false is requesting a new selection
         });
         if (model.getUserID() != null) {
             if (model.getVideoID() != null) {
 
-                FirebaseDatabase.getInstance().getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("totalReact").child(FirebaseAuth.getInstance().getUid()).child("Position").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                database.getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("totalReact").child(auth.getUid()).child("Position").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if (!task.isSuccessful()) {
@@ -244,7 +247,7 @@ public class videoViewAdapter extends RecyclerView.Adapter<videoViewAdapter.view
                     }
                 });
                 ArrayList<GetReactModel> rect = new ArrayList<>();
-                FirebaseDatabase.getInstance().getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("totalReact").addValueEventListener(new ValueEventListener() {
+                database.getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("totalReact").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         rect.clear();
@@ -253,13 +256,13 @@ public class videoViewAdapter extends RecyclerView.Adapter<videoViewAdapter.view
                             rect.add(model1);
                         }
                          if (rect.isEmpty()) {
-                             if (model.getUserID().equals(FirebaseAuth.getInstance().getUid())) {
+                             if (model.getUserID().equals(auth.getUid())) {
                                  holder.imageView6.setOnClickListener(new View.OnClickListener() {
                                      @Override
                                      public void onClick(View view) {
                                          if (model.getVideoID() != null) {
 
-                                             FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("storyVideo").child(model.getVideoID()).removeValue();
+                                             database.getReference().child("users").child(auth.getUid()).child("storyVideo").child(model.getVideoID()).removeValue();
 
                                          }
                                      }
@@ -270,13 +273,13 @@ public class videoViewAdapter extends RecyclerView.Adapter<videoViewAdapter.view
 //
                         }
                          else {
-                             if (model.getUserID().equals(FirebaseAuth.getInstance().getUid())) {
+                             if (model.getUserID().equals(auth.getUid())) {
                                  holder.imageView6.setOnClickListener(new View.OnClickListener() {
                                      @Override
                                      public void onClick(View view) {
                                          if (model.getVideoID() != null) {
 
-                                             FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("storyVideo").child(model.getVideoID()).child("totalReact").removeValue();
+                                             database.getReference().child("users").child(auth.getUid()).child("storyVideo").child(model.getVideoID()).child("totalReact").removeValue();
                                              Toast.makeText(context, "Image React deleted .Try again To delete Your Video", Toast.LENGTH_SHORT).show();
                                          }
                                      }
@@ -284,7 +287,7 @@ public class videoViewAdapter extends RecyclerView.Adapter<videoViewAdapter.view
                              } else {
                                  holder.imageView6.setVisibility(View.GONE);
                              }
-                             FirebaseDatabase.getInstance().getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("TotalReaction").setValue(rect.size());
+                             database.getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("TotalReaction").setValue(rect.size());
 
 //                    Toast.makeText(context, "Find React", Toast.LENGTH_SHORT).show();
                         }
@@ -295,7 +298,7 @@ public class videoViewAdapter extends RecyclerView.Adapter<videoViewAdapter.view
 
                     }
                 });
-                FirebaseDatabase.getInstance().getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("TotalReaction").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                database.getReference().child("users").child(model.getUserID()).child("storyVideo").child(model.getVideoID()).child("TotalReaction").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if (!task.isSuccessful()) {

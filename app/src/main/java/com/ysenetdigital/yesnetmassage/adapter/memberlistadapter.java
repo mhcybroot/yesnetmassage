@@ -37,7 +37,7 @@ public class memberlistadapter extends RecyclerView.Adapter<memberlistadapter.vi
     Context context;
     ArrayList<memberlistmodel> list;
     int page;
-
+FirebaseDatabase database;
     public memberlistadapter(Context context, ArrayList<memberlistmodel> list, int page) {
         this.context = context;
         this.list = list;
@@ -55,10 +55,10 @@ public class memberlistadapter extends RecyclerView.Adapter<memberlistadapter.vi
     @Override
     public void onBindViewHolder(@NonNull viewholder holder, int position) {
         memberlistmodel model = list.get(position);
-
+database = FirebaseDatabase.getInstance();
         if (page == 1||page==4) {
             try {
-                FirebaseDatabase.getInstance().getReference().child("users").child(model.getId()).child("profilepic").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                database.getReference().child("users").child(model.getId()).child("profilepic").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if (!task.isSuccessful()) {
@@ -73,7 +73,7 @@ public class memberlistadapter extends RecyclerView.Adapter<memberlistadapter.vi
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(context, userViewer.class);
-                        FirebaseDatabase.getInstance().getReference().child("users").child(model.getId()).child("profilepic").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                        database.getReference().child("users").child(model.getId()).child("profilepic").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DataSnapshot> task) {
                                 if (!task.isSuccessful()) {
@@ -81,7 +81,7 @@ public class memberlistadapter extends RecyclerView.Adapter<memberlistadapter.vi
                                 } else {
                                     String profilepic = String.valueOf(task.getResult().getValue());
                                     intent.putExtra("picUrl", profilepic);
-                                    FirebaseDatabase.getInstance().getReference().child("users").child(model.getId()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                    database.getReference().child("users").child(model.getId()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                         @Override
                                         public void onComplete(@NonNull Task<DataSnapshot> task) {
                                             if (!task.isSuccessful()) {
@@ -89,7 +89,7 @@ public class memberlistadapter extends RecyclerView.Adapter<memberlistadapter.vi
                                             } else {
                                                 String username = String.valueOf(task.getResult().getValue());
                                                 intent.putExtra("name", username);
-                                                FirebaseDatabase.getInstance().getReference().child("users").child(model.getId()).child("post").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                                database.getReference().child("users").child(model.getId()).child("post").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                                                         if (!task.isSuccessful()) {
@@ -97,7 +97,7 @@ public class memberlistadapter extends RecyclerView.Adapter<memberlistadapter.vi
                                                         } else {
                                                             String post = String.valueOf(task.getResult().getValue());
                                                             intent.putExtra("post", post);
-                                                            FirebaseDatabase.getInstance().getReference().child("users").child(model.getId()).child("email").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                                            database.getReference().child("users").child(model.getId()).child("email").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                                                 @Override
                                                                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                                                                     if (!task.isSuccessful()) {
@@ -105,7 +105,7 @@ public class memberlistadapter extends RecyclerView.Adapter<memberlistadapter.vi
                                                                     } else {
                                                                         String email = String.valueOf(task.getResult().getValue());
                                                                         intent.putExtra("email", post);
-                                                                        FirebaseDatabase.getInstance().getReference().child("users").child(model.getId()).child("userID").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                                                        database.getReference().child("users").child(model.getId()).child("userID").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                                                             @Override
                                                                             public void onComplete(@NonNull Task<DataSnapshot> task) {
                                                                                 if (!task.isSuccessful()) {
@@ -113,7 +113,7 @@ public class memberlistadapter extends RecyclerView.Adapter<memberlistadapter.vi
                                                                                 } else {
                                                                                     String userId = String.valueOf(task.getResult().getValue());
                                                                                     intent.putExtra("userId", userId);
-                                                                                    FirebaseDatabase.getInstance().getReference().child("users").child(model.getId()).child("memberId").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                                                                    database.getReference().child("users").child(model.getId()).child("memberId").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                                                                         @Override
                                                                                         public void onComplete(@NonNull Task<DataSnapshot> task) {
                                                                                             if (!task.isSuccessful()) {
@@ -122,7 +122,7 @@ public class memberlistadapter extends RecyclerView.Adapter<memberlistadapter.vi
                                                                                                 String memberID = String.valueOf(task.getResult().getValue());
                                                                                                 intent.putExtra("memberID", memberID);
 
-                                                                                                FirebaseDatabase.getInstance().getReference().child("users").child(model.getId()).child("total_reply").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                                                                                database.getReference().child("users").child(model.getId()).child("total_reply").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                                                                                     @Override
                                                                                                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                                                                                                         if (!task.isSuccessful()) {
@@ -159,7 +159,7 @@ public class memberlistadapter extends RecyclerView.Adapter<memberlistadapter.vi
                         });
                     }
                 });
-                FirebaseDatabase.getInstance().getReference().child("users").child(model.getId()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                database.getReference().child("users").child(model.getId()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if (!task.isSuccessful()) {
@@ -175,14 +175,14 @@ public class memberlistadapter extends RecyclerView.Adapter<memberlistadapter.vi
                     public void onClick(View view) {
                         if (page==1){
                             memberlistmodel memberlistmodel = new memberlistmodel(model.getId(), "Requested Permanent User");
-                            FirebaseDatabase.getInstance().getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(model.getId()).setValue(memberlistmodel);
+                            database.getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(model.getId()).setValue(memberlistmodel);
                             Map<String, String> zmap = new HashMap<>();
                             zmap.put("counsellingGroupStatus", "RequestToJoin");
                             FirebaseFirestore.getInstance().collection(model.getId()).document(model.getId()).set(zmap, SetOptions.merge());
 
                         }if (page==4){
                             memberlistmodel memberlistmodel = new memberlistmodel(FirebaseAuth.getInstance().getUid(), "Requested Permanent User");
-                            FirebaseDatabase.getInstance().getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(Objects.requireNonNull(model.getId())).setValue(memberlistmodel);
+                            database.getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(Objects.requireNonNull(model.getId())).setValue(memberlistmodel);
                             Map<String, String> zmap = new HashMap<>();
                             zmap.put("CounsellingGroupStatus", "RequestToJoin");
                             FirebaseFirestore.getInstance().collection(model.getId()).document(model.getId()).set(zmap, SetOptions.merge());
@@ -191,7 +191,7 @@ public class memberlistadapter extends RecyclerView.Adapter<memberlistadapter.vi
 
                     }
                 });
-//        FirebaseDatabase.getInstance().getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child(model.getId()).child("post").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//        database.getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child(model.getId()).child("post").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
 //            @Override
 //            public void onComplete(@NonNull Task<DataSnapshot> task) {
 //                if (task.isSuccessful()) {
@@ -199,7 +199,7 @@ public class memberlistadapter extends RecyclerView.Adapter<memberlistadapter.vi
 //                    if (namelist.equals("Block")) {
 //                        holder.button.setText("UnBlock");
 //                        memberlistmodel memberlistmodel = new memberlistmodel(model.getId(), "newUser");
-//                        FirebaseDatabase.getInstance().getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(model.getId()).setValue(memberlistmodel);
+//                        database.getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(model.getId()).setValue(memberlistmodel);
 //                        Map<String, String> zmap = new HashMap<>();
 //                        zmap.put("counsellingGroupStatus", "newUser");
 //                        FirebaseFirestore.getInstance().collection(model.getId()).document(model.getId()).set(zmap, SetOptions.merge());
@@ -210,7 +210,7 @@ public class memberlistadapter extends RecyclerView.Adapter<memberlistadapter.vi
 //                            public void onClick(View view) {
 //                                memberlistmodel memberlistmodel = new memberlistmodel(model.getId(), "Block");
 //                                holder.button.setText("UnBlock");
-//                                FirebaseDatabase.getInstance().getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(model.getId()).setValue(memberlistmodel);
+//                                database.getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(model.getId()).setValue(memberlistmodel);
 //                                Map<String, String> zmap = new HashMap<>();
 //                                zmap.put("counsellingGroupStatus", "Block");
 //                                FirebaseFirestore.getInstance().collection(model.getId()).document(model.getId()).set(zmap, SetOptions.merge());
@@ -229,7 +229,7 @@ public class memberlistadapter extends RecyclerView.Adapter<memberlistadapter.vi
 //            @Override
 //            public void onClick(View view) {
 //                memberlistmodel memberlistmodel = new memberlistmodel(model.getId(),"Block");
-//                FirebaseDatabase.getInstance().getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(model.getId()).setValue(memberlistmodel);
+//                database.getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(model.getId()).setValue(memberlistmodel);
 //                Map<String, String> zmap = new HashMap<>();
 //                zmap.put("counsellingGroupStatus", "Block");
 //                FirebaseFirestore.getInstance().collection(model.getId()).document(model.getId()).set(zmap, SetOptions.merge());
@@ -245,7 +245,7 @@ public class memberlistadapter extends RecyclerView.Adapter<memberlistadapter.vi
 
         try {
             if (page == 3) {
-                FirebaseDatabase.getInstance().getReference().child("users").child(model.getId()).child("profilepic").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                database.getReference().child("users").child(model.getId()).child("profilepic").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if (!task.isSuccessful()) {
@@ -256,7 +256,7 @@ public class memberlistadapter extends RecyclerView.Adapter<memberlistadapter.vi
                         }
                     }
                 });
-                FirebaseDatabase.getInstance().getReference().child("users").child(model.getId()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                database.getReference().child("users").child(model.getId()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if (!task.isSuccessful()) {
@@ -271,7 +271,7 @@ public class memberlistadapter extends RecyclerView.Adapter<memberlistadapter.vi
                     @Override
                     public void onClick(View view) {
                         memberlistmodel memberlistmodel = new memberlistmodel(model.getId(), "Requested Permanent User");
-                        FirebaseDatabase.getInstance().getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(Objects.requireNonNull(model.getId())).setValue(memberlistmodel);
+                        database.getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(Objects.requireNonNull(model.getId())).setValue(memberlistmodel);
                         Map<String, String> zmap = new HashMap<>();
                         zmap.put("CounsellingGroupStatus", "RequestToJoin");
                         FirebaseFirestore.getInstance().collection(model.getId()).document(model.getId()).set(zmap, SetOptions.merge());
@@ -286,7 +286,7 @@ public class memberlistadapter extends RecyclerView.Adapter<memberlistadapter.vi
 
         try {
             if (page == 2) {
-                FirebaseDatabase.getInstance().getReference().child("users").child(model.getId()).child("profilepic").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                database.getReference().child("users").child(model.getId()).child("profilepic").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if (!task.isSuccessful()) {
@@ -297,7 +297,7 @@ public class memberlistadapter extends RecyclerView.Adapter<memberlistadapter.vi
                         }
                     }
                 });
-                FirebaseDatabase.getInstance().getReference().child("users").child(model.getId()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                database.getReference().child("users").child(model.getId()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if (!task.isSuccessful()) {
@@ -313,7 +313,7 @@ public class memberlistadapter extends RecyclerView.Adapter<memberlistadapter.vi
                     @Override
                     public void onClick(View view) {
                         memberlistmodel memberlistmodel = new memberlistmodel(model.getId(), "member");
-                        FirebaseDatabase.getInstance().getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(Objects.requireNonNull(model.getId())).setValue(memberlistmodel);
+                        database.getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(Objects.requireNonNull(model.getId())).setValue(memberlistmodel);
                         Map<String, String> zmap = new HashMap<>();
                         zmap.put("counsellingGroupStatus", "member");
                         FirebaseFirestore.getInstance().collection(model.getId()).document(model.getId()).set(zmap, SetOptions.merge());

@@ -24,12 +24,14 @@ public class _verify_counsellor extends AppCompatActivity {
 ActivityVerifyCounsellorBinding binding;
     ArrayList<signup_models> list = new ArrayList<>();
     FirebaseDatabase database;
+    FirebaseAuth auth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        binding = ActivityVerifyCounsellorBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         database = FirebaseDatabase.getInstance();
+        auth = FirebaseAuth.getInstance();
 try {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         binding.adminCounssellorRecyclerView.setLayoutManager(linearLayoutManager);
@@ -48,7 +50,7 @@ try {
                         if (models.getPost()!= null){
                             if (models.getPost().equals("Requested Counsellor")){
                                 if (models.getUserID()!=null) {
-                                    if (models.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                                    if (models.getUserID().equals(auth.getCurrentUser().getUid())) {
 
                                     } else {
                                         models.setUserID(dataSnapshot.getKey());
@@ -82,7 +84,7 @@ try {
                         if (models.getPost()!= null){
                             if (models.getPost().equals("Requested Bangla Counselling Group Admin")){
                                 if (models.getUserID()!=null) {
-                                    if (models.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                                    if (models.getUserID().equals(auth.getCurrentUser().getUid())) {
 
                                     } else {
                                         models.setUserID(dataSnapshot.getKey());

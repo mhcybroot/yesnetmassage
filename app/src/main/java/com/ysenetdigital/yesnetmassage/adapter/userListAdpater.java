@@ -25,25 +25,22 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
 import com.squareup.picasso.Picasso;
 import com.ysenetdigital.yesnetmassage.BanglaCounsellingGroup;
 import com.ysenetdigital.yesnetmassage.R;
 import com.ysenetdigital.yesnetmassage.chatdeatails;
-import com.ysenetdigital.yesnetmassage.models.memberlistmodel;
 import com.ysenetdigital.yesnetmassage.models.userModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHolder> {
 
     Context context;
     ArrayList<userModel> datalist;
+    FirebaseDatabase database;
 
     public userListAdpater(Context context, ArrayList<userModel> datalist) {
         this.context = context;
@@ -63,7 +60,7 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
 
 
         userModel model = datalist.get(position);
-
+        database = FirebaseDatabase.getInstance();
 
 //if (position==0){
 //
@@ -109,11 +106,11 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
                                     String cousellingStatus = document.getString("counsellingGroupStatus");
                                     if (cousellingStatus.equals("Block")) {
                                         holder.itemView.setVisibility(View.GONE);
-                                            ViewGroup.LayoutParams params = holder.itemView.getLayoutParams();
-                                            params.height = 0;
-                                            params.width = 0;
-                                            holder.itemView.setLayoutParams(params);
-                                    }else {
+                                        ViewGroup.LayoutParams params = holder.itemView.getLayoutParams();
+                                        params.height = 0;
+                                        params.width = 0;
+                                        holder.itemView.setLayoutParams(params);
+                                    } else {
                                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
@@ -170,7 +167,7 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
 //                                                        Map<String, String> zmap = new HashMap<>();
 //                                                        zmap.put("counsellingGroupStatus", "RequestToJoin");
 //                                                        memberlistmodel memberlistmodel = new memberlistmodel(FirebaseAuth.getInstance().getUid(), "Requested Permanent User");
-//                                                        FirebaseDatabase.getInstance().getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(FirebaseAuth.getInstance().getUid()).setValue(memberlistmodel);
+//                                                        database.getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(FirebaseAuth.getInstance().getUid()).setValue(memberlistmodel);
 //
 //                                                        FirebaseFirestore.getInstance().collection(FirebaseAuth.getInstance().getUid()).document(FirebaseAuth.getInstance().getUid()).set(zmap, SetOptions.merge());
 //
@@ -226,7 +223,7 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
 //                                                    Map<String, String> zmap = new HashMap<>();
 //                                                    zmap.put("CounsellingGroupStatus", "RequestToJoin");
 //                                                    memberlistmodel memberlistmodel = new memberlistmodel(FirebaseAuth.getInstance().getUid(), "Requested Permanent User");
-//                                                    FirebaseDatabase.getInstance().getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(FirebaseAuth.getInstance().getUid()).setValue(memberlistmodel);
+//                                                    database.getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(FirebaseAuth.getInstance().getUid()).setValue(memberlistmodel);
 //
 //                                                    FirebaseFirestore.getInstance().collection(FirebaseAuth.getInstance().getUid()).document(FirebaseAuth.getInstance().getUid()).set(zmap, SetOptions.merge());
 //
@@ -353,7 +350,7 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
                         public void onClick(View view) {
                             Intent intent = new Intent(context, chatdeatails.class);
                             intent.putExtra("userId", model.getReciverID());
-                            FirebaseDatabase.getInstance().getReference().child("users").child(model.getReciverID()).child("profilepic").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            database.getReference().child("users").child(model.getReciverID()).child("profilepic").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                                     if (!task.isSuccessful()) {
@@ -361,7 +358,7 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
                                     } else {
                                         String profilepic = String.valueOf(task.getResult().getValue());
                                         intent.putExtra("profilePic", profilepic);
-                                        FirebaseDatabase.getInstance().getReference().child("users").child(model.getReciverID()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                        database.getReference().child("users").child(model.getReciverID()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                             @Override
                                             public void onComplete(@NonNull Task<DataSnapshot> task) {
                                                 if (!task.isSuccessful()) {
@@ -369,7 +366,7 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
                                                 } else {
                                                     String username = String.valueOf(task.getResult().getValue());
                                                     intent.putExtra("username", username);
-                                                    FirebaseDatabase.getInstance().getReference().child("users").child(model.getReciverID()).child("token").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                                    database.getReference().child("users").child(model.getReciverID()).child("token").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                                         @Override
                                                         public void onComplete(@NonNull Task<DataSnapshot> task) {
                                                             if (!task.isSuccessful()) {
@@ -395,7 +392,7 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
                     });
 
 
-//                    FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("NickName").child(model.getReciverID()).child("NickName").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//                    database.getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("NickName").child(model.getReciverID()).child("NickName").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
 //                        @Override
 //                        public void onComplete(@NonNull Task<DataSnapshot> task) {
 //                            if (task.isSuccessful()) {
@@ -403,7 +400,7 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
 //                                String nickName = String.valueOf(task.getResult().getValue());
 //
 //                                if (nickName == null) {
-//                                    FirebaseDatabase.getInstance().getReference().child("users").child(model.getReciverID()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//                                    database.getReference().child("users").child(model.getReciverID()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
 //                                        @Override
 //                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
 //                                            if (task.isSuccessful()) {
@@ -416,7 +413,7 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
 //                                    });
 //
 //                                } else if (nickName.equals("null")) {
-//                                    FirebaseDatabase.getInstance().getReference().child("users").child(model.getReciverID()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//                                    database.getReference().child("users").child(model.getReciverID()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
 //                                        @Override
 //                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
 //                                            if (task.isSuccessful()) {
@@ -466,7 +463,7 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
 //                                                    holder.add.setVisibility(View.GONE);
 //                                                    holder.add.setText("submit");
 //                                                    holder.userName.setText(nickname);
-//                                                    FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("NickName").child(model.getSenderID()).child("NickName").setValue(nickname);
+//                                                    database.getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("NickName").child(model.getSenderID()).child("NickName").setValue(nickname);
 //                                                }
 //
 //                                            }
@@ -477,7 +474,7 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
 //                                    }
 //                                });
 //                            } else {
-//                                FirebaseDatabase.getInstance().getReference().child("users").child(model.getReciverID()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//                                database.getReference().child("users").child(model.getReciverID()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
 //                                    @Override
 //                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
 //                                        if (task.isSuccessful()) {
@@ -494,7 +491,7 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
 //                    });
 
 
-                    FirebaseDatabase.getInstance().getReference().child("chats").child(model.getReciverID() + FirebaseAuth.getInstance().getUid()).orderByChild("timestamp").limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
+                    database.getReference().child("chats").child(model.getReciverID() + FirebaseAuth.getInstance().getUid()).orderByChild("timestamp").limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.hasChildren()) {
@@ -506,8 +503,8 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
                                     holder.simple_last_massage_time.setText(dateFormat.format(new Date(lastMsgTime)));
                                     holder.simple_last_massage_time.setVisibility(View.VISIBLE);
                                     Long time_lastmassage = dataSnapshot.child("timestamp").getValue(Long.class);
-//                            FirebaseDatabase.getInstance().getReference().child("users").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child("Friends").child(users.getUserID()).child("lastmassagetime").setValue(time_lastmassage);
-//                      FirebaseDatabase.getInstance().getReference().child("users").child(model.getSenderID()).child("lastmassagetime").setValue(time_lastmassage);
+//                            database.getReference().child("users").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child("Friends").child(users.getUserID()).child("lastmassagetime").setValue(time_lastmassage);
+//                      database.getReference().child("users").child(model.getSenderID()).child("lastmassagetime").setValue(time_lastmassage);
                                 }
 
                             }
@@ -518,7 +515,7 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
 
                         }
                     });
-                    FirebaseDatabase.getInstance().getReference().child("users").child(model.getReciverID()).child("profilepic").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    database.getReference().child("users").child(model.getReciverID()).child("profilepic").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DataSnapshot> task) {
                             if (task.isSuccessful()) {
@@ -545,7 +542,7 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
                     public void onClick(View view) {
                         Intent intent = new Intent(context, chatdeatails.class);
                         intent.putExtra("userId", model.getReciverID());
-                        FirebaseDatabase.getInstance().getReference().child("users").child(model.getReciverID()).child("profilepic").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                        database.getReference().child("users").child(model.getReciverID()).child("profilepic").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DataSnapshot> task) {
                                 if (!task.isSuccessful()) {
@@ -553,7 +550,7 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
                                 } else {
                                     String profilepic = String.valueOf(task.getResult().getValue());
                                     intent.putExtra("profilePic", profilepic);
-                                    FirebaseDatabase.getInstance().getReference().child("users").child(model.getReciverID()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                    database.getReference().child("users").child(model.getReciverID()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                         @Override
                                         public void onComplete(@NonNull Task<DataSnapshot> task) {
                                             if (!task.isSuccessful()) {
@@ -561,7 +558,7 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
                                             } else {
                                                 String username = String.valueOf(task.getResult().getValue());
                                                 intent.putExtra("username", username);
-                                                FirebaseDatabase.getInstance().getReference().child("users").child(model.getReciverID()).child("token").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                                database.getReference().child("users").child(model.getReciverID()).child("token").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                                                         if (!task.isSuccessful()) {
@@ -587,7 +584,7 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
                 });
 
 
-                FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("NickName").child(model.getReciverID()).child("NickName").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                database.getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("NickName").child(model.getReciverID()).child("NickName").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if (task.isSuccessful()) {
@@ -595,7 +592,7 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
                             String nickName = String.valueOf(task.getResult().getValue());
 
                             if (nickName == null) {
-                                FirebaseDatabase.getInstance().getReference().child("users").child(model.getReciverID()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                database.getReference().child("users").child(model.getReciverID()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                                         if (task.isSuccessful()) {
@@ -608,7 +605,7 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
                                 });
 
                             } else if (nickName.equals("null")) {
-                                FirebaseDatabase.getInstance().getReference().child("users").child(model.getReciverID()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                database.getReference().child("users").child(model.getReciverID()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                                         if (task.isSuccessful()) {
@@ -658,7 +655,7 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
                                                 holder.add.setVisibility(View.GONE);
                                                 holder.add.setText("submit");
                                                 holder.userName.setText(nickname);
-                                                FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("NickName").child(model.getReciverID()).child("NickName").setValue(nickname);
+                                                database.getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("NickName").child(model.getReciverID()).child("NickName").setValue(nickname);
                                             }
 
                                         }
@@ -669,7 +666,7 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
                                 }
                             });
                         } else {
-                            FirebaseDatabase.getInstance().getReference().child("users").child(model.getReciverID()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            database.getReference().child("users").child(model.getReciverID()).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                                     if (task.isSuccessful()) {
@@ -685,7 +682,7 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
                     }
                 });
 
-                FirebaseDatabase.getInstance().getReference().child("chats").child(model.getReciverID() + FirebaseAuth.getInstance().getUid()).orderByChild("timestamp").limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
+                database.getReference().child("chats").child(model.getReciverID() + FirebaseAuth.getInstance().getUid()).orderByChild("timestamp").limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.hasChildren()) {
@@ -697,8 +694,8 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
                                 holder.simple_last_massage_time.setText(dateFormat.format(new Date(lastMsgTime)));
                                 holder.simple_last_massage_time.setVisibility(View.VISIBLE);
                                 Long time_lastmassage = dataSnapshot.child("timestamp").getValue(Long.class);
-//                            FirebaseDatabase.getInstance().getReference().child("users").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child("Friends").child(users.getUserID()).child("lastmassagetime").setValue(time_lastmassage);
-//                      FirebaseDatabase.getInstance().getReference().child("users").child(model.getSenderID()).child("lastmassagetime").setValue(time_lastmassage);
+//                            database.getReference().child("users").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child("Friends").child(users.getUserID()).child("lastmassagetime").setValue(time_lastmassage);
+//                      database.getReference().child("users").child(model.getSenderID()).child("lastmassagetime").setValue(time_lastmassage);
                             }
 
                         }
@@ -709,7 +706,7 @@ public class userListAdpater extends RecyclerView.Adapter<userListAdpater.viewHo
 
                     }
                 });
-                FirebaseDatabase.getInstance().getReference().child("users").child(model.getReciverID()).child("profilepic").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                database.getReference().child("users").child(model.getReciverID()).child("profilepic").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if (task.isSuccessful()) {

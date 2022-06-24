@@ -21,12 +21,13 @@ import java.util.Objects;
 
 public class RequestedFriend extends AppCompatActivity {
     ActivityRequestedFriendBinding binding;
-
+FirebaseAuth auth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityRequestedFriendBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        auth = FirebaseAuth.getInstance();
        ArrayList<signup_models> list = new ArrayList<>();
         userAdapters adapters = new userAdapters(list, getApplicationContext(), 4);
         binding.requesterRecycler.setAdapter(adapters);
@@ -34,7 +35,7 @@ public class RequestedFriend extends AppCompatActivity {
         binding.requesterRecycler.setLayoutManager(linearLayoutManager);
 
 
-           FirebaseDatabase.getInstance().getReference().child("users").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child("Friends").addValueEventListener(new ValueEventListener() {
+           FirebaseDatabase.getInstance().getReference().child("users").child(Objects.requireNonNull(auth.getUid())).child("Friends").addValueEventListener(new ValueEventListener() {
                @Override
                public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
 

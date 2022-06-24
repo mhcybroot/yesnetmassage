@@ -37,12 +37,14 @@ public class Teacher extends Fragment {
     ArrayList<signup_models> molist = new ArrayList<>();
     FirebaseDatabase database;
     ProgressDialog progressDialog;
-
+FirebaseAuth auth;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentTeacherBinding.inflate(inflater, container, false);
+        auth = FirebaseAuth.getInstance();
+
         try {
             userAdapters adapters = new userAdapters(list, getContext(), 5);
             binding.allfriends.setAdapter(adapters);
@@ -53,7 +55,7 @@ public class Teacher extends Fragment {
             progressDialog.setTitle("Finding  Chats ");
             progressDialog.setMessage("Please Wait We are Finding Chats ......");
 
-            database.getReference().child("users").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child("Friends").addValueEventListener(new ValueEventListener() {
+            database.getReference().child("users").child(Objects.requireNonNull(auth.getUid())).child("Friends").addValueEventListener(new ValueEventListener() {
                 @SuppressLint("NotifyDataSetChanged")
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -66,10 +68,10 @@ public class Teacher extends Fragment {
                             list.add(models);
                         }
                         if (list.isEmpty()) {
-                            FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("TotalFriend").setValue(0);
+                            database.getReference().child("users").child(auth.getUid()).child("TotalFriend").setValue(0);
 
                         } else {
-                        FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("TotalFriend").setValue(list.size());
+                        database.getReference().child("users").child(auth.getUid()).child("TotalFriend").setValue(list.size());
                         }
 
                     }

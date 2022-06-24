@@ -88,13 +88,13 @@ public class signUp extends AppCompatActivity {
                                 binding.userSingupEmail.requestFocus();
                             } else {
 
-                                String id = Objects.requireNonNull(FirebaseAuth.getInstance().getUid());
+                                String id = Objects.requireNonNull(auth.getUid());
                                 signup_models model = new signup_models(username, id, memberID, email, password, "Inactive Member", "false", phoneNumber);
                                 long date = new Date().getTime();
                                 Date counsellingStopTime = new Date(System.currentTimeMillis() + 86400 * 1000 * 2);
                                 long counsellingStopTime2 = counsellingStopTime.getTime();
-                                userModel model1 = new userModel(email, "false", username, phoneNumber, username, "Inactive Member", "false", "false", FirebaseAuth.getInstance().getUid(), FirebaseAuth.getInstance().getUid(), FirebaseAuth.getInstance().getUid(), "photo", "token", date, counsellingStopTime2, "newUser", FirebaseAuth.getInstance().getUid());
-                                FirebaseFirestore.getInstance().collection(FirebaseAuth.getInstance().getUid()).document(FirebaseAuth.getInstance().getUid()).set(model1);
+                                userModel model1 = new userModel(email, "false", username, phoneNumber, username, "Inactive Member", "false", "false", auth.getUid(), auth.getUid(), auth.getUid(), "photo", "token", date, counsellingStopTime2, "newUser", auth.getUid());
+                                FirebaseFirestore.getInstance().collection(auth.getUid()).document(auth.getUid()).set(model1);
                                 database.getReference().child("users").child(id).setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void unused) {
@@ -108,7 +108,7 @@ public class signUp extends AppCompatActivity {
                                                     if (models.getMemberId() != null) {
 
                                                         if (models.getMemberId().equals(binding.userSingupReffercode.getText().toString())) {
-                                                            if (models.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                                                            if (models.getUserID().equals(auth.getCurrentUser().getUid())) {
                                                             } else {
                                                                 models.setUserID(dataSnapshot.getKey());
                                                                 list.add(models);

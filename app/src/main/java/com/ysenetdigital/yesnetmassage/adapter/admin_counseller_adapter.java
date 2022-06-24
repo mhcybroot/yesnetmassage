@@ -36,7 +36,7 @@ public class admin_counseller_adapter extends RecyclerView.Adapter<admin_counsel
     Context context;
     int  page ;
 
-
+FirebaseDatabase database;
 
     public admin_counseller_adapter(ArrayList<signup_models> list, Context context, int page) {
         this.list = list;
@@ -57,7 +57,7 @@ public class admin_counseller_adapter extends RecyclerView.Adapter<admin_counsel
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
 
         signup_models users = list.get(position);
-
+database = FirebaseDatabase.getInstance();
         try {
             holder.userName.setText(users.getUsername());
             holder.Post.setText(users.getPost());
@@ -112,14 +112,14 @@ public class admin_counseller_adapter extends RecyclerView.Adapter<admin_counsel
 
                     switch (page){
                         case 1:
-                            FirebaseDatabase.getInstance().getReference().child("users").child(users.getUserID()).child("post").setValue("Counsellor");
+                            database.getReference().child("users").child(users.getUserID()).child("post").setValue("Counsellor");
                             break;
                         case 2:
                             memberlistmodel memberlistmodel = new memberlistmodel(users.getUserID(), "admin");
-                            FirebaseDatabase.getInstance().getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(users.getUserID()).setValue(memberlistmodel);
-                            FirebaseDatabase.getInstance().getReference().child("users").child(users.getUserID()).child("post").setValue("BanglaCounsellorGroupAdmin");
+                            database.getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(users.getUserID()).setValue(memberlistmodel);
+                            database.getReference().child("users").child(users.getUserID()).child("post").setValue("BanglaCounsellorGroupAdmin");
                             memberlistmodel memberlistmodl = new memberlistmodel(users.getUserID(), "admin");
-                            FirebaseDatabase.getInstance().getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(Objects.requireNonNull(users.getUserID())).setValue(memberlistmodl);
+                            database.getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(Objects.requireNonNull(users.getUserID())).setValue(memberlistmodl);
                             Map<String, String> zmap = new HashMap<>();
                             zmap.put("CounsellingGroupStatus", "admin");
                             FirebaseFirestore.getInstance().collection(users.getUserID()).document(users.getUserID()).set(zmap, SetOptions.merge());

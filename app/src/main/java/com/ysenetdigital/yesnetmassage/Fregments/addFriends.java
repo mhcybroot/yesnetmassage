@@ -43,6 +43,7 @@ public class addFriends extends Fragment {
     ArrayList<signup_models> list = new ArrayList<>();
     ArrayList<signup_models> list2 = new ArrayList<>();
     FirebaseDatabase database;
+    FirebaseAuth auth;
     ProgressDialog progressDialog, progressDialogs;
 
 
@@ -53,6 +54,7 @@ public class addFriends extends Fragment {
         binding = FragmentAddFriendsBinding.inflate(inflater, container, false);
         try {
             database = FirebaseDatabase.getInstance();
+            auth = FirebaseAuth.getInstance();
             userAdapters adapters = new userAdapters(list, getContext(), 1);
             binding.addFriendsRecyclerView.setAdapter(adapters);
             binding.requestedFriend.setVisibility(View.GONE);
@@ -85,7 +87,7 @@ public class addFriends extends Fragment {
                     if (search.isEmpty()) {
 
                         binding.addfriendEacrcEdittext.requestFocus();
-                        database.getReference().child("users").addValueEventListener(new ValueEventListener() {
+                        database.getReference().child("users").limitToFirst(50).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 list.clear();
@@ -94,7 +96,7 @@ public class addFriends extends Fragment {
                                     if (models.getPost() != null) {
 
                                         if (models.getPost().contains("Member")) {
-                                            if (models.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                                            if (models.getUserID().equals(auth.getCurrentUser().getUid())) {
                                             } else {
                                                 models.setUserID(dataSnapshot.getKey());
                                                 list.add(models);
@@ -118,7 +120,7 @@ public class addFriends extends Fragment {
                             }
                         });
                     } else {
-                        database.getReference().child("users").addValueEventListener(new ValueEventListener() {
+                        database.getReference().child("users").limitToFirst(50).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 list.clear();
@@ -153,32 +155,31 @@ public class addFriends extends Fragment {
                 }
             });
 
-            database.getReference().child("users").addValueEventListener(new ValueEventListener() {
+            database.getReference().child("users").limitToFirst(80).addValueEventListener(new ValueEventListener() {
                 @SuppressLint("NotifyDataSetChanged")
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     list.clear();
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        signup_models models = dataSnapshot.getValue(signup_models.class);
-                        if (models.getPost() != null) {
-                            if (models.getPost().contains("Member")) {
-                                if (models.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                                } else {
-                                    models.setUserID(dataSnapshot.getKey());
-                                    list.add(models);
-                                }
-                            }
+                       try {
+                           signup_models models = dataSnapshot.getValue(signup_models.class);
+                           if (models.getPost() != null) {
+                               if (models.getPost().contains("Member")) {
+                                   if (models.getUserID().equals(auth.getCurrentUser().getUid())) {
+                                   } else {
+                                       models.setUserID(dataSnapshot.getKey());
+                                       list.add(models);
+                                   }
+                               }
 
-                        }
+                           }
+
+                       }catch (Exception e){
+                       }
 
 
                     }
-//                if (list.size()>0){
-//                    Toast.makeText(getContext(), "big", Toast.LENGTH_SHORT).show();
-//                }else {
-//                    Toast.makeText(getContext(), "Smoll", Toast.LENGTH_SHORT).show();
 //
-//                }
                     adapters.notifyDataSetChanged();
                 }
 

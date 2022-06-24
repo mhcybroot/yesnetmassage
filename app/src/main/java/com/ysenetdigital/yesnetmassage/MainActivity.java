@@ -42,6 +42,7 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private FirebaseAuth auth;
+    FirebaseDatabase database;
     NoInternetDialog noInternetDialog;
     NoInternetSnackbar noInternetSnackbar;
     String be;
@@ -50,26 +51,27 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+        database = FirebaseDatabase.getInstance();
         setContentView(binding.getRoot());
         try {
 
 
-            SharedPreferences sharedpreferences = getSharedPreferences("pageMainAcvity", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            String pageMAin2 = sharedpreferences.getString("position", "");
-            be = pageMAin2;
-            FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-            FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
-                    .setMinimumFetchIntervalInSeconds(0)
-                    .build();
-            mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings);
-            mFirebaseRemoteConfig.fetchAndActivate().addOnSuccessListener(new OnSuccessListener<Boolean>() {
-                @Override
-                public void onSuccess(Boolean aBoolean) {
-                    String toolbarColor = mFirebaseRemoteConfig.getString("toolbarColor");
-//                getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(toolbarColor)));
-                }
-            });
+//            SharedPreferences sharedpreferences = getSharedPreferences("pageMainAcvity", Context.MODE_PRIVATE);
+//            SharedPreferences.Editor editor = sharedpreferences.edit();
+//            String pageMAin2 = sharedpreferences.getString("position", "");
+//            be = pageMAin2;
+//            FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+//            FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+//                    .setMinimumFetchIntervalInSeconds(0)
+//                    .build();
+//            mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings);
+//            mFirebaseRemoteConfig.fetchAndActivate().addOnSuccessListener(new OnSuccessListener<Boolean>() {
+//                @Override
+//                public void onSuccess(Boolean aBoolean) {
+//                    String toolbarColor = mFirebaseRemoteConfig.getString("toolbarColor");
+////                getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(toolbarColor)));
+//                }
+//            });
             auth = FirebaseAuth.getInstance();
 
             binding.viewPage.setAdapter(new FragmentsAdapters(getSupportFragmentManager()));
@@ -122,9 +124,9 @@ public class MainActivity extends AppCompatActivity {
                 public void onSuccess(String s) {
                     Map<String, String> item = new HashMap<>();
                     item.put("token", s);
-                    FirebaseFirestore.getInstance().collection(FirebaseAuth.getInstance().getUid()).document(FirebaseAuth.getInstance().getUid()).set(item, SetOptions.merge());
+                    FirebaseFirestore.getInstance().collection(auth.getUid()).document(auth.getUid()).set(item, SetOptions.merge());
 //                Toast.makeText(MainActivity.this, s, Toast.LENGTH_SHORT).show();
-                    FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("token").setValue(s).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    database.getReference().child("users").child(auth.getUid()).child("token").setValue(s).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
 
@@ -153,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         try {
-            FirebaseDatabase.getInstance().getReference().child("presence").child(Objects.requireNonNull(auth.getCurrentUser().getUid())).setValue("Online");
+            database.getReference().child("presence").child(Objects.requireNonNull(auth.getCurrentUser().getUid())).setValue("Online");
         } catch (Exception e) {
             Toast.makeText(this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -205,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
 //    @Override
 //    protected void onStop() {
 //        super.onStop();
-//        FirebaseDatabase.getInstance().getReference().child("presence").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).setValue("Offline");
+//        database.getReference().child("presence").child(Objects.requireNonNull(auth.getUid())).setValue("Offline");
 //
 //
 //    }
@@ -214,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         try {
-            FirebaseDatabase.getInstance().getReference().child("presence").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).setValue("Online");
+            database.getReference().child("presence").child(Objects.requireNonNull(auth.getUid())).setValue("Online");
 
         } catch (Exception e) {
             Toast.makeText(this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
@@ -226,26 +228,26 @@ public class MainActivity extends AppCompatActivity {
     //    @Override
 //    protected void onDestroy() {
 //           super.onDestroy();
-//        FirebaseDatabase.getInstance().getReference().child("presence").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).setValue("Offline");
+//        database.getReference().child("presence").child(Objects.requireNonNull(auth.getUid())).setValue("Offline");
 //
 //
 //    }
 
     @Override
     protected void onStart() {
-        FirebaseDatabase.getInstance().getReference().child("users").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        database.getReference().child("users").child(Objects.requireNonNull(auth.getUid())).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (task.isSuccessful()) {
                     String username = String.valueOf(task.getResult().getValue());
                     if (username.equals("null")){
                         Intent intent = new Intent(MainActivity.this, signUp.class);
-                        intent.putExtra("number",FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+                        intent.putExtra("number",auth.getCurrentUser().getPhoneNumber());
                         startActivity(intent);
                         finishAffinity();
                     }else {
                         try {
-                            FirebaseDatabase.getInstance().getReference().child("presence").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).setValue("Online");
+                            database.getReference().child("presence").child(Objects.requireNonNull(auth.getUid())).setValue("Online");
                         } catch (Exception e) {
                             Toast.makeText(MainActivity.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -253,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
 
                 } else {
                     Intent intent = new Intent(MainActivity.this, signUp.class);
-                    intent.putExtra("number",FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber());
+                    intent.putExtra("number",auth.getCurrentUser().getPhoneNumber());
                     startActivity(intent);
                     finishAffinity();
                 }
@@ -267,8 +269,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         try {
-            if (FirebaseAuth.getInstance().getUid() != null) {
-                FirebaseDatabase.getInstance().getReference().child("presence").child(Objects.requireNonNull(auth.getUid())).setValue("Offline");
+            if (auth.getUid() != null) {
+                database.getReference().child("presence").child(Objects.requireNonNull(auth.getUid())).setValue("Offline");
             }
         } catch (Exception e) {
             Toast.makeText(this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
@@ -299,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.settings_main:
-                FirebaseDatabase.getInstance().getReference().child("users").child(auth.getUid()).child("post").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                database.getReference().child("users").child(auth.getUid()).child("post").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if (!task.isSuccessful()) {
@@ -320,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.logout_main:
                 try {
-                    FirebaseDatabase.getInstance().getReference().child("presence").child(Objects.requireNonNull(auth.getUid())).setValue("Offline");
+                    database.getReference().child("presence").child(Objects.requireNonNull(auth.getUid())).setValue("Offline");
                     auth.signOut();
                     Intent intent = new Intent(getApplicationContext(), ActivityPhone.class);
                     startActivity(intent);

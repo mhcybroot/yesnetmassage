@@ -33,6 +33,7 @@ public class requestTo extends Fragment {
         // Required empty public constructor
     }
 FragmentRequestToBinding binding;
+    FirebaseAuth auth;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -43,9 +44,10 @@ try {
     ArrayList<signup_models> list = new ArrayList<>();
     userAdapters adapters = new userAdapters(list, getContext(), 4);
     binding.requesterRecycler.setAdapter(adapters);
+auth = FirebaseAuth.getInstance();
     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
     binding.requesterRecycler.setLayoutManager(linearLayoutManager);
-    FirebaseDatabase.getInstance().getReference().child("users").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child("Friends").addValueEventListener(new ValueEventListener() {
+    FirebaseDatabase.getInstance().getReference().child("users").child(Objects.requireNonNull(auth.getUid())).child("Friends").addValueEventListener(new ValueEventListener() {
         @Override
         public void onDataChange(@androidx.annotation.NonNull DataSnapshot snapshot) {
 
@@ -62,10 +64,10 @@ try {
                 }
 
                 if (list.isEmpty()) {
-                    FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("TotalRequestFriend").setValue(0);
+                    FirebaseDatabase.getInstance().getReference().child("users").child(auth.getUid()).child("TotalRequestFriend").setValue(0);
 
                 } else {
-                    FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getUid()).child("TotalRequestFriend").setValue(list.size());
+                    FirebaseDatabase.getInstance().getReference().child("users").child(auth.getUid()).child("TotalRequestFriend").setValue(list.size());
                 }
             }
             adapters.notifyDataSetChanged();

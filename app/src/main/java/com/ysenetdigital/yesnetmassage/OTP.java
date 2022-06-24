@@ -50,7 +50,7 @@ String verificationId;
             dialog.setCancelable(false);
             dialog.show();
 
-            auth = FirebaseAuth.getInstance();
+
 
             getSupportActionBar().hide();
 
@@ -98,7 +98,7 @@ String verificationId;
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                             try {
-                                FirebaseDatabase.getInstance().getReference().child("users").child(Objects.requireNonNull(FirebaseAuth.getInstance().getUid())).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                FirebaseDatabase.getInstance().getReference().child("users").child(Objects.requireNonNull(auth.getUid())).child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                                         if (task.isSuccessful()) {

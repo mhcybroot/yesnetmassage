@@ -19,17 +19,19 @@ import java.util.ArrayList;
 
 public class requesteduseradd extends AppCompatActivity {
 ActivityRequesteduseraddBinding binding;
+FirebaseAuth auth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityRequesteduseraddBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        auth = FirebaseAuth.getInstance();
         ArrayList<memberlistmodel> list = new ArrayList<>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         memberlistadapter memberlistadapter = new memberlistadapter(getApplicationContext(), list,2);
         binding.requesetuseraddrecycler.setAdapter(memberlistadapter);
         binding.requesetuseraddrecycler.setLayoutManager(linearLayoutManager);
-//        FirebaseDatabase.getInstance().getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(FirebaseAuth.getInstance().getUid())
+//        FirebaseDatabase.getInstance().getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").child(auth.getUid())
         FirebaseDatabase.getInstance().getReference().child("group").child("BanglaCounsellingGroup").child("GroupInfo").child("memberlist").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -38,7 +40,7 @@ ActivityRequesteduseraddBinding binding;
                     memberlistmodel datalist = snapshot1.getValue(memberlistmodel.class);
 
                     if (datalist.getId() != null) {
-                        if (datalist.getId().equals(FirebaseAuth.getInstance().getUid())) {
+                        if (datalist.getId().equals(auth.getUid())) {
 
                         } else {
 

@@ -53,7 +53,7 @@ ImageView proPic;
         binding.userVideoRecycler.setAdapter(videoadapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         binding.userVideoRecycler.setLayoutManager(linearLayoutManager);
-        FirebaseDatabase.getInstance().getReference().child("users").child(Objects.requireNonNull(userId)).child("storyVideo").addValueEventListener(new ValueEventListener() {
+        database.getReference().child("users").child(Objects.requireNonNull(userId)).child("storyVideo").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 videoViewArrayList.clear();
@@ -83,7 +83,7 @@ ImageView proPic;
 //        binding.userImageRecyclerVIdeo.setAdapter(videoadapter);
 //        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 //        binding.userImageRecyclerVIdeo.setLayoutManager(linearLayoutManager);
-//        FirebaseDatabase.getInstance().getReference().child("users").child(userId).child("storyVideo").addValueEventListener(new ValueEventListener() {
+//        database.getReference().child("users").child(userId).child("storyVideo").addValueEventListener(new ValueEventListener() {
 //            @Override
 //            public void onDataChange(@NonNull DataSnapshot snapshot) {
 //                videoViewArrayList.clear();
